@@ -75,14 +75,14 @@
       font-weight: 600;
       color: var(--text-main);
     }
-    
-.card-balance {
-  font-size: 1.75rem;
-  font-weight: 500; /* Lighter than bold */
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+
+    .card-balance {
+      font-size: 2rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
     .refresh-icon {
       width: 20px;
@@ -130,32 +130,26 @@
       color: var(--text-placeholder);
     }
 
-/* === WALLET CARD === */
-.wallet-card {
-  background: var(--bg-secondary);
-  border-radius: var(--radius);
-  padding: 1.25rem;
-  text-align: center;
-  cursor: pointer;
-  border: 1px dashed var(--text-muted);
-  transition: var(--transition);
-}
+    .wallet-card {
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+    }
 
-.wallet-card:hover {
-  background: #2c3e50;
-  border-color: var(--bg-accent);
-}
+    .wallet-plus {
+      font-size: 2rem;
+      color: var(--text-muted);
+    }
 
-.wallet-plus {
-  font-size: 2.2rem;
-  color: var(--text-muted);
-}
-
-.wallet-label {
-  font-size: 0.85rem;
-  color: var(--text-placeholder);
-  margin-top: 0.4rem;
-}
+    .wallet-label {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--text-placeholder);
+    }
 
     .crypto-form {
       background: var(--bg-secondary);
@@ -314,7 +308,7 @@
       <div class="wallet-label">Add address</div>
     </div>
 
-    <div class="crypto-form" id="cryptoForm" style="display: none; flex-direction: column; gap: 10px;">
+    <div class="crypto-form" id="cryptoForm" style="display: none;">
       <select id="cryptoSelect" onchange="updateRates()">
         <option value="">Select Cryptocurrency</option>
         <option value="tether">USDT</option>
@@ -330,7 +324,7 @@
   </section>
 
   <section class="long-card">
-    <img src="WithBeforeImgIcon_202312161645314vxj (1).png" alt="Crypto">
+    <img src="WithBeforeImgIcon2_20231216164532fy7l.png" alt="Crypto">
     <div class="long-card-text">Select amount of</div>
   </section>
 
@@ -347,27 +341,6 @@
     <button class="withdraw-button" id="withdrawBtn">Withdraw</button>
   </section>
 
-<div id="receipt" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#fff; color:#000; padding:20px 30px; border-radius:8px; box-shadow:0 0 20px rgba(0,0,0,0.2); text-align:center; z-index:1000;">
-  <h3>Withdrawal Submitted</h3>
-  <p id="receiptAmount"></p>
-  <p id="receiptWallet"></p>
-  <p id="receiptTime"></p>
-  <p>Status: <strong>Pending</strong></p>
-</div>
-
-<!-- Confirm Modal -->
-<div id="confirmModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:999;">
-  <div style="background:#fff; padding:20px 30px; border-radius:8px; width:90%; max-width:400px; margin:100px auto; text-align:center;">
-    <h2>Confirm Withdrawal</h2>
-    <p id="confirmAmount"></p>
-    <p id="confirmWallet"></p>
-    <p id="confirmCrypto"></p>
-    <div style="margin-top:20px;">
-      <button id="confirmYes">Continue</button>
-      <button id="confirmNo">Cancel</button>
-    </div>
-  </div>
-</div>
   <div id="toast" style="display:none; position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#333; color:#fff; padding:10px 20px; border-radius:5px;"></div>
 
   <!-- Firebase & Script -->
@@ -408,9 +381,8 @@
         if (doc.exists) {
           const data = doc.data();
           const bal = data.balance || 0;
-          const formatted = bal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-balanceDisplay.textContent = `$${formatted}`;
-withdrawableLabel.textContent = `Withdraw balance $${formatted}`;
+          balanceDisplay.textContent = `$${bal.toFixed(2)}`;
+          withdrawableLabel.textContent = `Withdraw balance $${bal.toFixed(2)}`;
         }
       });
     }
@@ -422,9 +394,8 @@ withdrawableLabel.textContent = `Withdraw balance $${formatted}`;
         if (doc.exists) {
           const data = doc.data();
           const bal = data.balance || 0;
-          const formatted = bal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-balanceDisplay.textContent = `$${formatted}`;
-withdrawableLabel.textContent = `Withdraw balance $${formatted}`;
+          balanceDisplay.textContent = `$${bal.toFixed(2)}`;
+          withdrawableLabel.textContent = `Withdraw balance $${bal.toFixed(2)}`;
           showToast("Balance refreshed");
         }
       } catch (err) {
@@ -471,10 +442,10 @@ withdrawableLabel.textContent = `Withdraw balance $${formatted}`;
       const container = document.getElementById('savedWalletContainer');
       const { name, logo } = cryptoData[key];
       container.innerHTML = `
-        <div class="saved-wallet" style="display:flex; align-items:center; gap:10px; margin-top:10px;">
-          <img src="${logo}" alt="${name}" style="width:30px;height:30px;" />
+        <div class="saved-wallet">
+          <img src="${logo}" alt="${name}" />
           <div class="saved-wallet-info">
-            <strong>${name}</strong><br>
+            <strong>${name}</strong>
             <span class="wallet-address-full">${address}</span>
           </div>
         </div>
@@ -495,7 +466,6 @@ withdrawableLabel.textContent = `Withdraw balance $${formatted}`;
         updateCryptoEquivalent();
       } catch (err) {
         console.error('Error loading rates', err);
-        showToast('Failed to fetch crypto rates');
       }
     }
 
@@ -529,10 +499,10 @@ withdrawableLabel.textContent = `Withdraw balance $${formatted}`;
         showToast("User not authenticated");
         return;
       }
-      if (isNaN(withdrawAmount) || withdrawAmount < 5000) {
-  showToast("Minimum withdrawal amount is $5,000");
-  return;
-}
+      if (isNaN(withdrawAmount) || withdrawAmount <= 0) {
+        showToast("Enter a valid amount");
+        return;
+      }
 
       try {
         const userRef = db.collection('users').doc(userId);
@@ -554,7 +524,7 @@ withdrawableLabel.textContent = `Withdraw balance $${formatted}`;
         const newBalance = currentBalance - withdrawAmount;
         await userRef.update({ balance: newBalance });
 
-        // Record withdrawal request
+        // Optional: Record withdrawal request
         await db.collection('withdrawals').add({
           userId: userId,
           amount: withdrawAmount,
@@ -564,20 +534,8 @@ withdrawableLabel.textContent = `Withdraw balance $${formatted}`;
           status: "pending"
         });
 
-        const formattedAmount = withdrawAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-document.getElementById('receiptAmount').textContent = `Amount: $${formattedAmount}`;
-const userSnapAfter = await db.collection('users').doc(userId).get();
-const wallet = userSnapAfter.data().wallet || {};
-document.getElementById('receiptWallet').textContent = `Wallet: ${wallet.address || "N/A"}`;
-document.getElementById('receiptTime').textContent = `Time: ${new Date().toLocaleString()}`;
-document.getElementById('receipt').style.display = 'block';
-
-setTimeout(() => {
-  document.getElementById('receipt').style.display = 'none';
-}, 5000);
-
-amountInput.value = '';
-document.getElementById('cryptoEquivalent').value = '';
+        showToast("Withdrawal request submitted");
+        amountInput.value = '';
         document.getElementById('cryptoEquivalent').value = '';
       } catch (err) {
         console.error("Withdrawal error", err);
@@ -596,8 +554,6 @@ document.getElementById('cryptoEquivalent').value = '';
             const data = doc.data();
             if (data.wallet && data.wallet.address && data.wallet.key) {
               renderSavedWallet(data.wallet);
-              document.getElementById("cryptoSelect").value = data.wallet.key;
-              updateRates();
             } else {
               document.getElementById('walletCard').style.display = 'flex';
             }
