@@ -1,0 +1,1809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Truvatrade</title>
+  <style>
+    :root {
+      --background: #0b1120;
+      --primary: #ffffff;
+      --accent: #60a5fa;
+      --text-main: #ffffff;
+      --text-muted: #94a3b8;
+      --card-bg: #1e293b;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--background);
+      color: var(--text-main);
+      font-family: "Segoe UI", "Helvetica Neue", system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    .top-bar {
+      background-color: #1e293b;
+      color: var(--text-main);
+      font-size: 0.85rem;
+      padding: 0.5rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #334155;
+    }
+
+    header {
+      background-color: var(--background);
+      padding: 1.5rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo-rect {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 8px;
+    }
+
+    .menu-icon {
+      width: 32px;
+      height: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .menu-icon div {
+      height: 4px;
+      background-color: var(--text-main);
+      border-radius: 2px;
+    }
+.full-card {
+  background-color: var(--card-bg);
+  width: 90%;
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 3rem 2rem;
+  position: relative;
+  /* Remove overflow hidden to avoid cutting content */
+  /* overflow: hidden; */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  border-radius: 20px;
+  /* Allow height to auto-adjust */
+  height: auto;
+}
+
+/* rest remains unchanged */
+
+
+    .full-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('world2.png');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.1;
+      z-index: 0;
+    }
+
+    .full-card h1, .full-card p {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+    }
+
+    .full-card h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+
+    .card-description {
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      line-height: 1.8;
+    }
+
+    .register-btn {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #ffffff;
+      background-color: var(--accent);
+      border: none;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      position: relative;
+      z-index: 1;
+    }
+
+    .register-btn:hover {
+      background-color: #3b82f6;
+      transform: translateY(-2px);
+    }
+
+    /* Logo Section Refined */
+    .logo-section {
+      background-color: var(--card-bg);
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      margin: 2rem auto;
+      width: 90%;
+      max-width: 800px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .logo-section img {
+      width: 220px;
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 1.5rem;
+      border-radius: 12px;
+      object-fit: contain;
+      transition: opacity 0.3s ease;
+    }
+
+    .segmented-card {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .segmented-card button {
+      background-color: #334155;
+      color: var(--primary);
+      border: 2px solid transparent;
+      border-radius: 12px;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .segmented-card button:hover {
+      background-color: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .floating-card {
+      width: 90%;
+      max-width: 1100px;
+      margin: 3rem auto;
+      padding: 2.5rem 2rem;
+      background-color: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+      text-align: left;
+    }
+
+    .floating-card h2 {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .floating-card p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+    }
+.info-section {
+  width: 90%;
+  max-width: 1000px;
+  margin: 3rem auto;
+  text-align: center;
+  color: var(--text-main);
+}
+
+.info-section h2 {
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+  color: var(--primary);
+}
+
+.info-section .subtitle {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.info-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.info-card {
+  background-color: #334155;
+  padding: 1.5rem;
+  border-radius: 16px;
+  text-align: left;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.info-card h3 {
+  color: var(--accent);
+  margin-top: 0;
+  font-size: 1.4rem;
+}
+
+.info-card p {
+  color: var(--text-muted);
+  font-size: 1rem;
+  margin-bottom: 0;
+}
+
+@media (min-width: 768px) {
+  .info-cards {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .info-card {
+    width: 48%;
+  }
+}
+    .feature-columns {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .feature-block {
+      background-color: #334155;
+      padding: 1.5rem;
+      border-radius: 16px;
+    }
+/* Overlay */
+.truva-sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 998;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+}
+.truva-sidebar-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Sidebar */
+.truva-sidebar {
+  position: fixed;
+  top: 0;
+  left: -260px;
+  width: 260px;
+  height: 100%;
+  background-color: #0b1120;
+  color: white;
+  z-index: 999;
+  transition: left 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.truva-sidebar.active {
+  left: 0;
+}
+.truva-sidebar-header {
+  padding: 20px;
+  border-bottom: 1px solid #333;
+  font-size: 22px;
+  font-weight: bold;
+}
+.truva-sidebar-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.truva-sidebar-menu li a {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  gap: 10px;
+  color: white;
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+.truva-sidebar-menu li a:hover {
+  background: #1f2937;
+}
+.truva-icon {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+}
+
+/* Auth Buttons */
+.truva-auth-buttons {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.truva-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  font-weight: 600;
+  gap: 8px;
+  text-decoration: none;
+  border-radius: 6px;
+}
+.truva-login-btn {
+  background: #1f2937;
+  color: white;
+}
+.truva-signup-btn {
+  background: #10b981;
+  color: white;
+}
+.truva-login-btn:hover {
+  background: #374151;
+}
+.truva-signup-btn:hover {
+  background: #059669;
+}
+    .feature-block h3 {
+      margin-top: 0;
+      font-size: 1.4rem;
+      color: var(--accent);
+    }
+
+    .feature-block ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .feature-block ul li {
+      margin: 0.5rem 0;
+      color: var(--text-main);
+    }
+.image-section {
+  width: 90%;
+  max-width: 1100px;
+  margin: 2rem auto;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.image-section img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 16px;
+}
+    footer {
+      margin-top: auto;
+      background-color: #1e293b;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+
+    @media (min-width: 768px) {
+      .feature-columns {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
+      .feature-block {
+        width: 48%;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .full-card h1 {
+        font-size: 2rem;
+      }
+
+      .card-description {
+        font-size: 1rem;
+      }
+
+      .segmented-card {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .logo-section img {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Truvatrade Preloader (4K Graphics Optimized - No Layout Changes) -->
+<div id="rexa-loader">
+  <div class="message">Truvatrade</div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+  html.loading,
+  body.loading {
+    overflow: hidden;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  #rexa-loader {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at center, #0b1120 0%, #000 100%);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Orbitron', sans-serif;
+    animation: fadeOut 0.5s ease-out 5.5s forwards;
+    pointer-events: none;
+
+    /* Ensure crisp rendering on 4K displays */
+    transform: translateZ(0);
+    will-change: transform;
+    image-rendering: pixelated;
+  }
+
+  .message {
+    font-size: clamp(2rem, 8vw, 6rem);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-align: center;
+    padding: 0 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 0;
+    max-width: 90vw;
+    box-sizing: border-box;
+    animation: typing 2s steps(20) forwards;
+    position: relative;
+    color: white;
+
+    /* Force GPU acceleration */
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .message::after {
+    content: 'Truvatrade';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #fff, #999, #fff);
+    background-size: 200%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    opacity: 0;
+    animation: shimmer 2s infinite;
+    animation-delay: 2.1s;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes typing {
+    to {
+      width: 100%;
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -100%;
+      opacity: 1;
+    }
+    100% {
+      background-position: 100%;
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    to {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+</style>
+
+<script>
+  document.documentElement.classList.add("loading");
+  document.body.classList.add("loading");
+  window.scrollTo(0, 0);
+
+  setTimeout(() => {
+    const loader = document.getElementById("rexa-loader");
+    if (loader) loader.remove();
+
+    document.documentElement.classList.remove("loading");
+    document.body.classList.remove("loading");
+    document.body.style.overflow = 'auto';
+    document.documentElement.style.overflow = 'auto';
+  }, 6000);
+</script>
+
+<!-- Top Bar -->
+<div class="top-bar">
+  <div id="language-selector" class="top-bar-item" role="button" aria-haspopup="true">
+    🌐 <span id="current-lang-label">🇺🇸 English (US)</span> ▼
+  </div>
+  <div id="account-btn" class="top-bar-item" role="button">My Account</div>
+
+  <!-- Language Dropdown -->
+  <div id="language-dropdown" class="language-dropdown" role="menu" aria-label="Language selection">
+    <div data-lang="en">🇺🇸 English (US)</div>
+    <div data-lang="en-GB">🇬🇧 English (UK)</div>
+    <div data-lang="es">🇪🇸 Spanish</div>
+    <div data-lang="fr">🇫🇷 French</div>
+    <div data-lang="de">🇩🇪 German</div>
+    <div data-lang="it">🇮🇹 Italian</div>
+    <div data-lang="zh-CN">🇨🇳 Chinese</div>
+    <div data-lang="ja">🇯🇵 Japanese</div>
+    <div data-lang="ru">🇷🇺 Russian</div>
+  </div>
+</div>
+
+<!-- Hidden Google Translate Element -->
+<div id="google_translate_element" style="display: none;"></div>
+
+<style>
+  .top-bar {
+    display: flex;
+    gap: 20px;
+    font-family: Arial, sans-serif;
+    align-items: center;
+    position: relative;
+    background-color: #0b1120;
+    padding: 12px 24px;
+    color: #fff;
+    user-select: none;
+    flex-wrap: wrap;
+  }
+
+  .top-bar-item {
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+  }
+
+  .top-bar-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .language-dropdown {
+    display: none;
+    position: absolute;
+    top: 50px;
+    left: 20px;
+    background: #1c2433;
+    border: 1px solid #333;
+    border-radius: 6px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    color: #fff;
+    min-width: 180px;
+    z-index: 1000;
+  }
+
+  .language-dropdown div {
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .language-dropdown div:hover {
+    background: #2a3142;
+  }
+
+  @media (max-width: 600px) {
+    .top-bar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .language-dropdown {
+      left: 0;
+    }
+  }
+
+  /* Hide Google Translate UI completely */
+  .goog-te-banner-frame.skiptranslate,
+  .goog-te-banner-frame,
+  body > .skiptranslate,
+  .goog-te-gadget {
+    display: none !important;
+    height: 0 !important;
+    visibility: hidden !important;
+  }
+
+  body {
+    top: 0px !important;
+    position: static !important;
+  }
+</style>
+
+<script>
+  // Google Translate Initialization
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'en',
+      includedLanguages: 'en,en-GB,es,fr,de,it,zh-CN,ja,ru',
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+      autoDisplay: false
+    }, 'google_translate_element');
+  }
+
+  // Load Google Translate script
+  (function () {
+    const script = document.createElement('script');
+    script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    document.head.appendChild(script);
+  })();
+
+  const langSelector = document.getElementById('language-selector');
+  const langDropdown = document.getElementById('language-dropdown');
+  const currentLangLabel = document.getElementById('current-lang-label');
+  const accountBtn = document.getElementById('account-btn');
+
+  // Toggle dropdown
+  langSelector.addEventListener('click', () => {
+    langDropdown.style.display = (langDropdown.style.display === 'block') ? 'none' : 'block';
+  });
+
+  // Close dropdown on outside click
+  document.addEventListener('click', (e) => {
+    if (!langSelector.contains(e.target) && !langDropdown.contains(e.target)) {
+      langDropdown.style.display = 'none';
+    }
+  });
+
+  // Set cookie and reload with selected language
+  langDropdown.querySelectorAll('div[data-lang]').forEach(item => {
+    item.addEventListener('click', () => {
+      const lang = item.getAttribute('data-lang');
+      const domain = location.hostname.split('.').slice(-2).join('.');
+
+      if (lang === 'en') {
+        document.cookie = `googtrans=/en/en; path=/; domain=.${domain}`;
+      } else {
+        document.cookie = `googtrans=/en/${lang}; path=/; domain=.${domain}`;
+      }
+
+      location.reload();
+    });
+  });
+
+  // Update language label dynamically
+  function updateLanguageLabel() {
+    const match = document.cookie.match(/googtrans=\/en\/([a-zA-Z-]+)/);
+    const langCode = match ? match[1] : 'en';
+
+    const map = {
+      'en': 'English (US)',
+      'en-GB': 'English (UK)',
+      'es': 'Spanish',
+      'fr': 'French',
+      'de': 'German',
+      'it': 'Italian',
+      'zh-CN': 'Chinese',
+      'ja': 'Japanese',
+      'ru': 'Russian'
+    };
+
+    const flagMap = {
+      'en': '🇺🇸',
+      'en-GB': '🇬🇧',
+      'es': '🇪🇸',
+      'fr': '🇫🇷',
+      'de': '🇩🇪',
+      'it': '🇮🇹',
+      'zh-CN': '🇨🇳',
+      'ja': '🇯🇵',
+      'ru': '🇷🇺'
+    };
+
+    const label = map[langCode] || 'English (US)';
+    const flag = flagMap[langCode] || '🇺🇸';
+    currentLangLabel.textContent = `${flag} ${label}`;
+  }
+
+  // On page load
+  updateLanguageLabel();
+
+  // Account button redirect
+  accountBtn.addEventListener('click', () => {
+    window.location.href = '/account.html';
+  });
+</script>
+
+<!-- Header -->
+<header>
+  <div class="logo-rect" title="Truvatrade">
+    <img src="1999.png" alt="TruvaTrade Logo" style="width: 100%; height: 100%; object-fit: contain;" />
+  </div>
+  <div class="menu-icon" title="Menu">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</header>
+
+<!-- Sidebar Overlay -->
+<div class="truva-sidebar-overlay"></div>
+
+<!-- Sidebar -->
+<aside class="truva-sidebar" id="truva-sidebar">
+  <!-- Sidebar Title -->
+  <div class="truva-sidebar-header">Truva Trade</div>
+
+  <!-- Sidebar Menu -->
+  <ul class="truva-sidebar-menu">
+    <li>
+      <a href="/home.html">
+        <svg class="truva-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9L12 2l9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Home
+      </a>
+    </li>
+    <li>
+      <a href="/account.html">
+        <svg class="truva-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a8.38 8.38 0 0 1 13 0"/></svg>
+        Account Type
+      </a>
+    </li>
+    <li>
+      <a href="/demo.html">
+        <svg class="truva-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M16 2v4M8 2v4M2 10h20"/></svg>
+        Demo
+      </a>
+    </li>
+    <li>
+      <a href="/contact.html">
+        <svg class="truva-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Contact
+      </a>
+    </li>
+    <li>
+      <a href="/more">
+        <svg class="truva-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+        More
+      </a>
+    </li>
+  </ul>
+
+  <!-- Auth Buttons -->
+  <div class="truva-auth-buttons">
+    <a href="/login.html" class="truva-btn truva-login-btn">
+      <svg class="truva-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/></svg>
+      Login
+    </a>
+    <a href="/register.html" class="truva-btn truva-signup-btn">
+      <svg class="truva-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+      Signup
+    </a>
+  </div>
+</aside>
+
+<!-- Hero Section -->
+<div class="full-card">
+  <h1 id="hero-title">We Provide the Best<br>Trade Services</h1>
+  <p id="hero-description" class="card-description">
+    Trade with transparent pricing and fast,<br>
+    reliable trade executions on over 80<br>
+    currencies and cryptocurrencies.
+  </p>
+  <a href="#register" class="register-btn" id="register-btn">Register Now</a>
+</div>
+
+  <!--  Section with Horizontal Segmented Buttons -->
+  <div class="logo-section">
+    <img id="dynamic-" src="home-carousel.png" alt="Trading " />
+    <div class="segmented-card">
+      <button onclick="changeLogo('green-energy.png')">FX Trading</button>
+      <button onclick="changeLogo('home-carousel.png')">Option Trading</button>
+      <button onclick="changeLogo('home-carousel.png')">Secured Trading</button>
+    </div>
+  </div>
+
+  <!-- Floating Card: Secured + Cloud Trading Features -->
+  <div class="floating-card">
+    <h2>Secured Trading and Cloud Trading</h2>
+    <p>We process and secure trade data in the cloud with state-of-the-art security</p>
+    <div class="feature-columns">
+      <div class="feature-block">
+        <h3>Secured Trading Features</h3>
+        <ul>
+          <li>Secured trading data to users</li>
+          <li>Top notch security</li>
+          <li>Company does not trade users data</li>
+          <li>It is a long established program</li>
+          <li>All our data are over the web</li>
+        </ul>
+      </div>
+      <div class="feature-block">
+        <h3>Cloud Trading Features</h3>
+        <ul>
+          <li>Real-time data and security</li>
+          <li>No lag for stream data</li>
+          <li>Many desktop publishing packages</li>
+          <li>Automated web pages</li>
+          <li>Premium content processors</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+<!-- Full-Width Image Section -->
+<div class="image-container notranslate">
+  <img src="investor.png" alt="My Image">
+</div>
+
+<!-- Info Section After Image -->
+<div class="info-section">
+  <h2>Trade with precision</h2>
+  <p class="subtitle">
+    Own your trading experience with powerful trading platforms and professional trader support.
+  </p>
+  <div class="info-cards">
+    <div class="info-card">
+      <h3>Safe and Secured</h3>
+      <p>With top level encryption, we ensure your account stays safe and secure</p>
+    </div>
+    <div class="info-card">
+      <h3>Our Dedicated Support</h3>
+      <p>We provide 24/7 support for all your enquiries</p>
+    </div>
+  </div>
+</div>
+
+<!-- After last card PNG -->
+<div class="image-container">
+  <img src="green-energy.png" alt="First Descriptive Image" />
+</div>
+
+<section class="feature-text-section">
+  <h2>We don’t compromise with the best Trading Solution</h2>
+  <p>We offer 30 days free trading signals for Platinuim account types and higher</p>
+  <p>We process and secure trade data in the clouds with state of the art security</p>
+  
+  <a href="/register.html" class="register-btn-left">Register Now</a>
+</section>
+
+<style>
+  .image-container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 3rem auto;
+    text-align: center;
+  }
+
+  .image-container img {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
+
+  .feature-text-section {
+    max-width: 800px;
+    margin: 2rem auto 4rem;
+    padding: 0 1rem;
+    text-align: left; /* changed to left */
+    color: var(--primary);
+  }
+
+  .feature-text-section h2 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .feature-text-section p {
+    font-size: 1.15rem;
+    margin: 0.6rem 0;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .register-btn-left {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 0.5rem 1.2rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    background-color: var(--accent);
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+  .register-btn-left:hover,
+  .register-btn-left:focus {
+    background-color: #3b82f6;
+    transform: translateY(-2px);
+    outline: none;
+  }
+
+  @media (max-width: 600px) {
+    .feature-text-section h2 {
+      font-size: 1.8rem;
+    }
+    .feature-text-section p {
+      font-size: 1rem;
+    }
+    .register-btn-left {
+      padding: 0.5rem 1rem;
+      font-size: 0.95rem;
+    }
+  }
+</style>
+
+<!-- New Section Card -->
+<section class="online-truvatrade-section">
+  <h2>At Online Truvatrade...</h2>
+  <p class="underlined">All our users are important to us.</p>
+
+  <div class="feature-list">
+    <div class="feature-item">
+      <h3>Trade Copy</h3>
+      <p>We allow trade copy from more experienced traders to your account</p>
+    </div>
+    <div class="feature-item">
+      <h3>Secure</h3>
+      <p>We provide security of funds and trading account</p>
+    </div>
+    <div class="feature-item">
+      <h3>Real Time Trade</h3>
+      <p>We provide real time data for faster trades and results</p>
+    </div>
+    <div class="feature-item">
+      <h3>Fast Transactions</h3>
+      <p>Fast deposits and withdrawals to provide hassle free transactions</p>
+    </div>
+    <div class="feature-item">
+      <h3>Learning</h3>
+      <p>We allow our clients learn or practice before trading</p>
+    </div>
+    <div class="feature-item">
+      <h3>Premium support</h3>
+      <p>We guide our clients to make sure everybody profits from the system</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .online-truvatrade-section {
+    max-width: 900px;
+    margin: 4rem auto;
+    padding: 0 1rem;
+    color: var(--primary);
+    text-align: center;
+  }
+
+  .online-truvatrade-section h2 {
+    font-size: 2.6rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .underlined {
+    text-decoration: underline;
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    display: inline-block;
+    color: var(--accent);
+  }
+
+  .feature-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    text-align: left;
+  }
+
+  .feature-item h3 {
+    color: var(--accent);
+    font-size: 1.3rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .feature-item p {
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 600px) {
+    .online-truvatrade-section h2 {
+      font-size: 2rem;
+    }
+    .underlined {
+      font-size: 1.1rem;
+    }
+  }
+</style>
+
+<!-- Where We Stand Out Section -->
+<section class="standout-section">
+  <h2>Where We Stand Out</h2>
+  <p class="intro-text">
+    It is a long established fact that our company stands out amongst all others on the internet.
+  </p>
+
+  <div class="standout-columns">
+    <!-- Fast Transactions -->
+    <div class="standout-block">
+      <h3>Fast Transactions</h3>
+      <p>Fast deposits and withdrawals to provide hassle free transactions.</p>
+      <p>We provide real time data for faster trades and results.</p>
+      <div class="standout-actions">
+        <a href="/offers" class="standout-btn">See Offer</a>
+        <a href="/readmore" class="standout-link">Read More</a>
+      </div>
+    </div>
+
+    <!-- Cloud Trading -->
+    <div class="standout-block">
+      <h3>Cloud Trading</h3>
+      <p>We provide security of funds and trading account.</p>
+      <p>We allow trade copy from more experienced traders to your account.</p>
+      <div class="standout-actions">
+        <a href="/offers" class="standout-btn">See Offer</a>
+        <a href="/readmore" class="standout-link">Read More</a>
+      </div>
+    </div>
+
+    <!-- Dedicated Servers -->
+    <div class="standout-block">
+      <h3>Dedicated Servers</h3>
+      <p>We allow trading from anywhere in the world.</p>
+      <p>We allow our clients learn or practice before trading.</p>
+      <div class="standout-actions">
+        <a href="/offers" class="standout-btn">See Offer</a>
+        <a href="/readmore" class="standout-link">Read More</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .standout-section {
+    max-width: 1100px;
+    margin: 4rem auto;
+    padding: 2rem 1rem;
+    color: var(--primary);
+    text-align: center;
+  }
+
+  .standout-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+
+  .standout-section .intro-text {
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+    line-height: 1.6;
+  }
+
+  .standout-columns {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .standout-block {
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: left;
+  }
+
+  .standout-block h3 {
+    font-size: 1.6rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  .standout-block p {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .standout-actions {
+    margin-top: 1rem;
+  }
+
+  .standout-btn {
+    display: inline-block;
+    margin-right: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--accent);
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.3s ease;
+  }
+
+  .standout-btn:hover {
+    background-color: #3b82f6;
+  }
+
+  .standout-link {
+    color: var(--text-muted);
+    text-decoration: underline;
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+
+  @media (min-width: 768px) {
+    .standout-columns {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    .standout-block {
+      width: 30%;
+    }
+  }
+</style>
+
+<!-- Premium Trading Offers Section with Icons (Dark Mode) -->
+<section class="premium-offers-dark">
+  <h2 class="section-title">Check out our latest trading offers</h2>
+  <p class="section-subtitle">At <span class="brand-name">Online Truvatrade</span> we have a lot to offer new traders</p>
+
+  <div class="offer-cards">
+    <!-- STARTER Plan -->
+    <div class="plan-card starter">
+      <div class="icon-circle">C1</div>
+      <h3 class="plan-title">STARTER</h3>
+      <p class="bonus">10% referral bonus only</p>
+      <p class="benefit">No Deposit Bonus</p>
+      <p class="amount">$100</p>
+      <a href="/start" class="start-btn">Start now</a>
+    </div>
+
+    <!-- SILVER Plan -->
+    <div class="plan-card silver">
+      <div class="icon-circle">C2</div>
+      <h3 class="plan-title">SILVER</h3>
+      <p class="bonus">12.5% referral bonus</p>
+      <p class="benefit">5% Deposit Bonus</p>
+      <p class="amount">$7,500</p>
+      <a href="/start" class="start-btn">Start now</a>
+    </div>
+
+    <!-- GOLD Plan -->
+    <div class="plan-card gold">
+      <div class="icon-circle">C3</div>
+      <h3 class="plan-title">GOLD</h3>
+      <p class="bonus">3 days free trade signals</p>
+      <p class="benefit">7.5% Deposit Bonus</p>
+      <p class="amount">$20,000</p>
+      <a href="/start" class="start-btn">Start now</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .premium-offers-dark {
+    background-color: #0f172a; /* dark slate background */
+    color: #f1f5f9;
+    padding: 4rem 1rem;
+    text-align: center;
+  }
+
+  .section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #f8fafc;
+  }
+
+  .section-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+    color: #94a3b8;
+  }
+
+  .brand-name {
+    font-weight: 600;
+    color: #38bdf8;
+  }
+
+  .offer-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .plan-card {
+    background: #1e293b;
+    border-radius: 16px;
+    padding: 2rem 1.5rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    transition: transform 0.3s ease;
+  }
+
+  .plan-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .icon-circle {
+    width: 60px;
+    height: 60px;
+    background-color: #2563eb;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    margin: 0 auto 1rem;
+  }
+
+  .plan-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #f8fafc;
+  }
+
+  .bonus, .benefit {
+    font-size: 1rem;
+    color: #cbd5e1;
+    margin: 0.3rem 0;
+  }
+
+  .amount {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #38bdf8;
+    margin: 0.8rem 0;
+  }
+
+  .start-btn {
+    margin-top: 1rem;
+    display: inline-block;
+    background-color: #38bdf8;
+    color: #0f172a;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+
+  .start-btn:hover {
+    background-color: #0ea5e9;
+  }
+
+  @media (min-width: 768px) {
+    .offer-cards {
+      flex-direction: row;
+      justify-content: center;
+    }
+
+    .plan-card {
+      width: 30%;
+    }
+  }
+</style>
+
+<!-- Testimonials Section -->
+<section class="testimonials-section">
+  <h2 class="section-title">What our clients are saying?</h2>
+  <p class="section-subtitle">Hear it directly from our traders across the U.S.</p>
+
+  <div class="testimonial-card">
+    <p class="testimonial-quote">"Online Truvatrade gave me full control over my trades. The platform is fast, reliable, and their support team is always there when I need them."</p>
+    <p class="testimonial-author">— Emily R., New York</p>
+    <a href="/start" class="start-btn">Start Now</a>
+  </div>
+</section>
+
+<style>
+  .testimonials-section {
+    background-color: #0f172a;
+    color: #f1f5f9;
+    padding: 4rem 1rem;
+    text-align: center;
+  }
+
+  .testimonial-card {
+    background-color: #1e293b;
+    padding: 2rem;
+    border-radius: 16px;
+    max-width: 700px;
+    margin: 2rem auto 0;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  }
+
+  .testimonial-quote {
+    font-size: 1.2rem;
+    font-style: italic;
+    color: #cbd5e1;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
+
+  .testimonial-author {
+    font-weight: 600;
+    color: #38bdf8;
+    margin-bottom: 1.5rem;
+  }
+
+  .start-btn {
+    background-color: #38bdf8;
+    color: #0f172a;
+    padding: 0.6rem 1.4rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+  }
+
+  .start-btn:hover {
+    background-color: #0ea5e9;
+  }
+
+  @media (max-width: 600px) {
+    .testimonial-quote {
+      font-size: 1rem;
+    }
+  }
+</style>
+
+<!-- Support Card Section -->
+<section class="support-section">
+  <div class="support-card">
+    <h2 style="color: #38bdf8;">Need help? Contact our award-winning support team</h2>
+    <p>If you have any questions, you are free to contact our support team any time.</p>
+    <a href="/contact.html" class="contact-btn">Contact us now</a>
+  </div>
+</section>
+
+<style>
+  .support-section {
+    background-color: #0f172a; /* Dark theme base */
+    padding: 4rem 1rem;
+    text-align: center;
+    color: #f1f5f9;
+  }
+
+  .support-card {
+    max-width: 700px;
+    margin: 0 auto;
+    background-color: #1e293b;
+    padding: 2.5rem;
+    border-radius: 18px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  }
+
+  .support-card h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .support-card p {
+    font-size: 1.1rem;
+    color: #cbd5e1;
+    margin-bottom: 2rem;
+  }
+
+  .contact-btn {
+    background-color: #38bdf8;
+    color: #0f172a;
+    padding: 0.8rem 1.6rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+
+  .contact-btn:hover {
+    background-color: #0ea5e9;
+  }
+
+  @media (max-width: 600px) {
+    .support-card h2 {
+      font-size: 1.6rem;
+    }
+
+    .support-card p {
+      font-size: 1rem;
+    }
+  }
+</style>
+
+<!-- FAQ Section -->
+<section class="faq-section">
+  <div class="faq-container">
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <button class="faq-question">What is bitcoin?</button>
+      <div class="faq-answer">
+        <p>Bitcoin is a decentralized digital currency that can be transferred on the peer-to-peer bitcoin network without the need for intermediaries.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">Who Developed Bitcoin?</button>
+      <div class="faq-answer">
+        <p>Bitcoin was created by an anonymous person or group using the pseudonym Satoshi Nakamoto in 2009.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">What is Bitcoin Mining?</button>
+      <div class="faq-answer">
+        <p>Bitcoin mining is the process of adding transactions to Bitcoin’s public ledger and verifying them using complex mathematical algorithms.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">Is Bitcoin Used For Illegal Activities?</button>
+      <div class="faq-answer">
+        <p>Like cash, Bitcoin can be used legally or illegally. However, its transparent ledger helps law enforcement track illicit transactions.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">Can Bitcoin Be Regulated In Any Way?</button>
+      <div class="faq-answer">
+        <p>While Bitcoin itself is decentralized, governments can regulate exchanges and services that use Bitcoin within their jurisdictions.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">Is Bitcoin anonymous?</button>
+      <div class="faq-answer">
+        <p>Bitcoin is pseudonymous. While addresses don't contain personal info, transactions are publicly visible and can be traced with enough data.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">How Can I Sell Bitcoins?</button>
+      <div class="faq-answer">
+        <p>You can sell Bitcoin through cryptocurrency exchanges, peer-to-peer platforms, or Bitcoin ATMs depending on your location and needs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Styles -->
+<style>
+  .faq-section {
+    background-color: #0f172a;
+    color: #f1f5f9;
+    padding: 4rem 1rem;
+  }
+
+  .faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .faq-container h2 {
+    font-size: 2rem;
+    text-align: center;
+    color: #38bdf8;
+    margin-bottom: 2rem;
+  }
+
+  .faq-item {
+    margin-bottom: 1.2rem;
+    border-bottom: 1px solid #334155;
+  }
+
+  .faq-question {
+    width: 100%;
+    background: none;
+    border: none;
+    outline: none;
+    color: #f1f5f9;
+    text-align: left;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 0.8rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .faq-question:hover {
+    background-color: #1e293b;
+  }
+
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    padding: 0 0.8rem;
+    color: #94a3b8;
+  }
+
+  .faq-answer p {
+    margin: 0.5rem 0 1rem;
+  }
+
+  .faq-item.active .faq-answer {
+    max-height: 200px; /* Enough for short answer */
+  }
+</style>
+
+<!-- FAQ Script -->
+<script>
+  const faqItems = document.querySelectorAll('.faq-item');
+
+  faqItems.forEach(item => {
+    item.querySelector('.faq-question').addEventListener('click', () => {
+      item.classList.toggle('active');
+      faqItems.forEach(otherItem => {
+        if (otherItem !== item) otherItem.classList.remove('active');
+      });
+    });
+  });
+</script>
+
+<!-- Covered Card Section -->
+<section class="covered-card">
+  <div class="covered-content">
+    <h2>At Online Truva Trade we got you covered!</h2>
+    <p>Your success with us is our primary concern...</p>
+    <a href="/register.html" class="register-btn">Register Now</a>
+  </div>
+</section>
+
+<style>
+  .covered-card {
+    background-color: #0f172a;
+    padding: 3rem 1rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .covered-content {
+    max-width: 800px;
+    width: 100%;
+    background-color: #1e293b;
+    color: #f1f5f9;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  }
+
+  .covered-content h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #38bdf8;
+  }
+
+  .covered-content p {
+    font-size: 1.15rem;
+    color: #cbd5e1;
+    margin-bottom: 2rem;
+  }
+
+  .register-btn {
+    display: inline-block;
+    background-color: #38bdf8;
+    color: #0f172a;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+  }
+
+  .register-btn:hover {
+    background-color: #0ea5e9;
+  }
+
+  @media (max-width: 600px) {
+    .covered-content h2 {
+      font-size: 1.6rem;
+    }
+
+    .covered-content p {
+      font-size: 1rem;
+    }
+  }
+</style>
+
+<!-- Left-Aligned Footer -->
+<footer class="footer-left">
+  <div class="footer-content">
+    <h3>Links</h3>
+    <ul>
+      <li><a href="/register.html">Register</a></li>
+      <li><a href="/login.html">Login</a></li>
+      <li><a href="/demo.html">Demo</a></li>
+      <li><a href="/binary-options">Binary Options</a></li>
+    </ul>
+
+    <h3>Company</h3>
+    <ul>
+      <li><a href="/about-us">About Us</a></li>
+      <li><a href="/contact-us.html">Contact Us</a></li>
+      <li><a href="/faq">FAQ</a></li>
+      <li><a href="/legal-info">Legal Info</a></li>
+    </ul>
+
+    <h3>Legal Info</h3>
+    <ul>
+      <li><a href="/terms-of-service">Terms of Service</a></li>
+      <li><a href="/privacy-policy">Privacy Policy</a></li>
+      <li><a href="/banking.html">Banking</a></li>
+      <li><a href="/disclaimer">Disclaimer</a></li>
+    </ul>
+
+    <h3>Contact Information</h3>
+    <p>Email: <a href="mailto:support@online.truvatrade.org">support@online.truvatrade.org</a></p>
+
+    <h3>Quick Links</h3>
+    <ul class="quick-links">
+      <li><a href="/register.html">Register</a></li>
+      <li><a href="/login.html">Login</a></li>
+      <li><a href="/demo">Demo</a></li>
+    </ul>
+
+    <div class="footer-note">
+      <p>
+        Use of this Site is subject to express terms of use. By using this site, you signify that you agree to be bound by these.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer-left {
+    background-color: #0f172a;
+    color: #cbd5e1;
+    padding: 3rem 1.5rem;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .footer-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  .footer-content h3 {
+    color: #38bdf8;
+    font-size: 1.2rem;
+    margin-top: 2rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .footer-content ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1rem;
+  }
+
+  .footer-content ul li {
+    margin-bottom: 0.4rem;
+  }
+
+  .footer-content a {
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: 0.95rem;
+  }
+
+  .footer-content a:hover {
+    color: #38bdf8;
+  }
+
+  .footer-content p {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+
+  .quick-links {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-note {
+    border-top: 1px solid #334155;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    font-size: 0.85rem;
+    color: #94a3b8;
+  }
+
+  @media (max-width: 600px) {
+    .footer-content {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .quick-links {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+</style>
+<script>
+  const sidebar = document.getElementById('truva-sidebar');
+  const overlay = document.querySelector('.truva-sidebar-overlay');
+  const menuIcon = document.querySelector('.menu-icon');
+
+  function toggleSidebar(show) {
+    sidebar.classList.toggle('active', show);
+    overlay.classList.toggle('active', show);
+  }
+
+  menuIcon.addEventListener('click', () => toggleSidebar(true));
+  overlay.addEventListener('click', () => toggleSidebar(false));
+</script>
+  <script>
+    function changeLogo(imageName) {
+      document.getElementById("dynamic-logo").src = imageName;
+    }
+  </script>
+
+</body>
+</html>

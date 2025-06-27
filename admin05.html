@@ -1,0 +1,153 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KYC Admin Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous"/>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0b1120;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }header {
+  background: #0f172a;
+  padding: 1rem;
+  text-align: center;
+  font-size: 1.25rem;
+  border-bottom: 1px solid #1e293b;
+}
+
+.kyc-container {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.kyc-card {
+  background: #1e293b;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.kyc-card h3 {
+  margin-top: 0;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.kyc-info {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.kyc-images {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.kyc-images img {
+  width: 120px;
+  height: auto;
+  border-radius: 4px;
+  object-fit: cover;
+  border: 1px solid #334155;
+}
+
+.actions button {
+  margin-right: 1rem;
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.approve {
+  background-color: #22c55e;
+  color: white;
+}
+
+.reject {
+  background-color: #ef4444;
+  color: white;
+}
+
+  </style>
+</head>
+<body>
+  <header>
+    <i class="fas fa-id-card"></i> KYC Admin Dashboard
+  </header>  <div class="kyc-container" id="kyc-list">
+    Loading...
+  </div>  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+    import { getFirestore, collectionGroup, updateDoc, doc, getDocs } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB89FVW7DW8xdASCAyNsTN71zK5p_YMSVk",
+      authDomain: "titanium-fx.firebaseapp.com",
+      projectId: "titanium-fx",
+      storageBucket: "titanium-fx.appspot.com",
+      messagingSenderId: "623119248603",
+      appId: "1:623119248603:web:824489ee0033bef9bdf0fe"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function loadKYC() {
+      const listEl = document.getElementById("kyc-list");
+      listEl.innerHTML = "";
+
+      const snapshot = await getDocs(collectionGroup(db, "kycData"));
+      snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        if (data.status === "pending") {
+          const card = document.createElement("div");
+          card.className = "kyc-card";
+          card.innerHTML = `
+            <h3>${data.firstName} ${data.lastName}</h3>
+            <div class="kyc-info">Email: ${data.email}</div>
+            <div class="kyc-info">Country: ${data.country} | Zip: ${data.zipCode}</div>
+            <div class="kyc-info">Gender: ${data.gender} | Address: ${data.address}</div>
+            <div class="kyc-info">Expiry: ${data.expiryDate || "-"}</div>
+            <div class="kyc-images">
+              <div>
+                <div style="font-size: 0.8rem; margin-bottom: 0.3rem;">ID</div>
+                <img src="${data.idUrl}" alt="ID">
+              </div>
+              <div>
+                <div style="font-size: 0.8rem; margin-bottom: 0.3rem;">Selfie</div>
+                <img src="${data.selfieUrl}" alt="Selfie">
+              </div>
+            </div>
+            <div class="actions">
+              <button class="approve" onclick="approveKYC('${docSnap.ref.path}')">Approve</button>
+              <button class="reject" onclick="rejectKYC('${docSnap.ref.path}')">Reject</button>
+            </div>
+          `;
+          listEl.appendChild(card);
+        }
+      });
+    }
+
+    window.approveKYC = async (docPath) => {
+      await updateDoc(doc(db, docPath), { status: "approved" });
+      alert("KYC Approved");
+      loadKYC();
+    };
+
+    window.rejectKYC = async (docPath) => {
+      await updateDoc(doc(db, docPath), { status: "rejected" });
+      alert("KYC Rejected");
+      loadKYC();
+    };
+
+    loadKYC();
+  </script></body>
+</html>

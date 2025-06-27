@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Add Product – KW Sell</title>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 2rem;
+    }
+    .form-container {
+      background: white;
+      padding: 2rem;
+      max-width: 600px;
+      margin: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    input, textarea {
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.75rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #00c853;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    #status {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>Add New Product</h2>
+    <form id="addProductForm">
+      <label>Title</label>
+      <input type="text" id="title" required />
+      <label>Description</label>
+      <textarea id="description" required></textarea>
+      <label>Price (₦)</label>
+      <input type="number" id="price" required min="0" step="0.01" />
+      <label>Image</label>
+      <input type="file" id="image" accept="image/*" required />
+      <button type="submit">Upload Product</button>
+    </form>
+    <p id="status"></p>
+  </div>
+
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyA70ve45oT9k0LfypFv1wdmB1dqp3Ex9xQ",
+      authDomain: "kwstore-ng.firebaseapp.com",
+      projectId: "kwstore-ng",
+      storageBucket: "kwstore-ng.appspot.com",
+      messagingSenderId: "437297612926",
+      appId: "1:437297612926:web:b9f2da2602af5f801e702f"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // Cloudinary Configuration
+    const cloudName = "dy65t4t1x"; // your Cloudinary cloud name
+    const uploadPreset = "kwstore"; // <-- 🔁 Replace this
+
+    // DOM Elements
+    const form = document.getElementById("addProductForm");
+    const statusText = document.getElementById("status");
+
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "login.html";
+      }
+    });
+
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const title = document.getElementById("title").value.trim();
+      const description = document.getElementById("description").value.trim();
+      const price = parseFloat(document.getElementById("price").value);
+      const imageFile = document.getElementById("image").files[0];
+      const button = form.querySelector("button");
+
+      statusText.textContent = "Uploading image...";
+      button.disabled = true;
+
+      try {
+        // Upload to Cloudinary
+        const formData = new FormData();
+        formData.append("file", imageFile);
+        formData.append("upload_preset", uploadPreset);
+
+        const cloudRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+          method: "POST",
+          body: formData
+        });
+
+        const cloudData = await cloudRes.json();
+        if (!cloudRes.ok || !cloudData.secure_url) {
+          throw new Error(cloudData.error?.message || "Cloudinary upload failed");
+        }
+
+        const imageUrl = cloudData.secure_url;
+
+        // Save product in Firestore
+        await db.collection("products").add({
+          uid: user.uid,
+          title,
+          description,
+          price,
+          imageUrl,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        statusText.textContent = "✅ Product uploaded successfully!";
+        form.reset();
+      } catch (err) {
+        console.error("Upload error:", err);
+        statusText.textContent = `❌ Error: ${err.message}`;
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

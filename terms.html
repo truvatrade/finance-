@@ -1,0 +1,651 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Truvatrade</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --background: #0b1120;
+      --primary: #ffffff;
+      --accent: #60a5fa;
+      --text-main: #ffffff;
+      --text-muted: #94a3b8;
+      --card-bg: #1e293b;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--background);
+      color: var(--text-main);
+      font-family: "Segoe UI", "Helvetica Neue", system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    .top-bar {
+      background-color: var(--card-bg);
+      color: var(--text-main);
+      font-size: 0.85rem;
+      padding: 0.5rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #334155;
+      position: relative;
+    }
+    .top-bar-item {
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 4px;
+      transition: background 0.3s ease;
+    }
+    .top-bar-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .language-dropdown {
+      display: none;
+      position: absolute;
+      top: 50px;
+      left: 20px;
+      background: #1c2433;
+      border: 1px solid #333;
+      border-radius: 6px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      color: #fff;
+      min-width: 180px;
+      z-index: 1000;
+    }
+    .language-dropdown div {
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .language-dropdown div:hover {
+      background: #2a3142;
+    }
+    header {
+      background-color: var(--background);
+      padding: 1.5rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo-rect {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 8px;
+    }
+    .menu-icon {
+      width: 32px;
+      height: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+    .menu-icon div {
+      height: 4px;
+      background-color: var(--text-main);
+      border-radius: 2px;
+    }
+    .plans-card, .support-card {
+      background-color: #111827;
+      border-radius: 1.25rem;
+      padding: 1.8rem;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      width: 100%;
+    }
+    .plans-card .title, .support-card .title {
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+      line-height: 1.4;
+    }
+    .plans-card .breadcrumb {
+      font-size: 0.85rem;
+      color: #9ca3af;
+      margin-bottom: 1.2rem;
+    }
+    .support-card .description {
+      font-size: 0.9rem;
+      color: #d1d5db;
+      margin-bottom: 1.3rem;
+      line-height: 1.5;
+    }
+    .cta-btn {
+      width: 100%;
+      background-color: #3b82f6;
+      color: #fff;
+      padding: 0.85rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    .plans-card .cta-btn:hover {
+      background-color: #2563eb;
+    }
+    .support-card .cta-btn {
+      background-color: #22c55e;
+    }
+    .support-card .cta-btn:hover {
+      background-color: #16a34a;
+    }
+    .footer-left {
+      background-color: #0f172a;
+      color: #cbd5e1;
+      padding: 3rem 1.5rem;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .footer-content {
+      max-width: 1100px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    .footer-content h3 {
+      color: #38bdf8;
+      font-size: 1.2rem;
+      margin-top: 2rem;
+      margin-bottom: 0.8rem;
+    }
+    .footer-content ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 1rem;
+    }
+    .footer-content ul li {
+      margin-bottom: 0.4rem;
+    }
+    .footer-content a {
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+    .footer-content a:hover {
+      color: #38bdf8;
+    }
+    .footer-content p {
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+    .quick-links {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .footer-note {
+      border-top: 1px solid #334155;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+    .truva-sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 998;
+    }
+    .truva-sidebar {
+      position: fixed;
+      top: 0;
+      left: -260px;
+      width: 260px;
+      height: 100%;
+      background-color: #0b1120;
+      color: white;
+      z-index: 999;
+      transition: left 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .truva-sidebar.active {
+      left: 0;
+    }
+    .truva-sidebar-header {
+      padding: 20px;
+      border-bottom: 1px solid #333;
+      font-size: 22px;
+      font-weight: bold;
+    }
+    .truva-sidebar-menu {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .truva-sidebar-menu li a {
+      display: flex;
+      align-items: center;
+      padding: 15px 20px;
+      gap: 10px;
+      color: white;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+    .truva-sidebar-menu li a:hover {
+      background: #1f2937;
+    }
+    .truva-icon {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+    }
+    .truva-auth-buttons {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .truva-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      font-weight: 600;
+      gap: 8px;
+      text-decoration: none;
+      border-radius: 6px;
+    }
+    .truva-login-btn {
+      background: #1f2937;
+      color: white;
+    }
+    .truva-signup-btn {
+      background: #10b981;
+      color: white;
+    }
+    .truva-login-btn:hover {
+      background: #374151;
+    }
+    .truva-signup-btn:hover {
+      background: #059669;
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div id="language-selector" class="top-bar-item" role="button">
+      🌐 <span id="current-lang-label">🇺🇸 English (US)</span> ▼
+    </div>
+    <div id="account-btn" class="top-bar-item" role="button">My Account</div>
+    <div id="language-dropdown" class="language-dropdown" role="menu">
+      <div data-lang="en">🇺🇸 English (US)</div>
+      <div data-lang="en-GB">🇬🇧 English (UK)</div>
+      <div data-lang="es">🇪🇸 Spanish</div>
+      <div data-lang="fr">🇫🇷 French</div>
+      <div data-lang="de">🇩🇪 German</div>
+      <div data-lang="it">🇮🇹 Italian</div>
+      <div data-lang="zh-CN">🇨🇳 Chinese</div>
+      <div data-lang="ja">🇯🇵 Japanese</div>
+      <div data-lang="ru">🇷🇺 Russian</div>
+    </div>
+  </div>
+
+  <!-- Sidebar Overlay -->
+  <div class="truva-sidebar-overlay" onclick="toggleSidebar(false)"></div>
+
+  <!-- Sidebar -->
+  <aside class="truva-sidebar" id="truva-sidebar">
+    <div class="truva-sidebar-header">Truva Trade</div>
+    <ul class="truva-sidebar-menu">
+      <li><a href="/home.html"><svg class="truva-icon" viewBox="0 0 24 24"><path d="M3 9L12 2l9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Home</a></li>
+      <li><a href="/account"><svg class="truva-icon" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a8.38 8.38 0 0 1 13 0"/></svg> Account Type</a></li>
+      <li><a href="/demo"><svg class="truva-icon" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M16 2v4M8 2v4M2 10h20"/></svg> Demo</a></li>
+      <li><a href="/contact"><svg class="truva-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Contact</a></li>
+      <li><a href="/more"><svg class="truva-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg> More</a></li>
+    </ul>
+    <div class="truva-auth-buttons">
+      <a href="/login" class="truva-btn truva-login-btn"><svg class="truva-icon" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/></svg> Login</a>
+      <a href="/register" class="truva-btn truva-signup-btn"><svg class="truva-icon" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg> Signup</a>
+    </div>
+  </aside>
+
+  <!-- Header -->
+  <header>
+    <div class="logo-rect" title="TruvaTrade">
+      <img src="https://res.cloudinary.com/dy65t4t1x/image/upload/v1750736066/squticdpmeefnalovglk.png" alt="TruvaTrade Logo" style="width: 100%; height: 100%; object-fit: contain;" />
+    </div>
+    <div class="menu-icon" onclick="toggleSidebar(true)">
+      <div></div><div></div><div></div>
+    </div>
+  </header>
+
+  <!-- Plans Card -->
+  <section style="width: 100vw; padding: 2rem 1rem; background-color: var(--background);">
+    <div style="max-width: 420px; margin: 0 auto;">
+      <div class="plans-card">
+        <div class="title">Plans</div>
+        <div class="breadcrumb">Home / Plans</div>
+        <button class="cta-btn">Get started now</button>
+      </div>
+    </div>
+  </section>
+
+<!-- Terms & Conditions Section -->
+<section style="width: 100vw; background-color: #0b1120; padding: 4rem 1rem;">
+  <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem;">
+    
+    <!-- Heading & Breadcrumb -->
+    <div style="text-align: center;">
+      <h2 style="color: #fff; font-size: 2rem; margin-bottom: 0.25rem;">Terms & Conditions</h2>
+      <p style="color: #ccc; font-size: 0.9rem;">Home / Terms</p>
+    </div>
+
+    <!-- Legal Text Content Card -->
+    <div style="background: #111827; border-radius: 1rem; padding: 2rem; color: #e5e7eb; box-shadow: 0 0 20px rgba(255,255,255,0.05); overflow-y: auto; max-height: 80vh;">
+      <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem;">Online Truva Trade - User Agreement</h3>
+      <p style="line-height: 1.8; font-size: 0.95rem; white-space: pre-line;">
+        
+Our website is accessible worldwide to anyone with internet access. The access to and use of our site are subject to the following terms and conditions.
+
+ 
+
+BY USING AND ACCESSING OUR SITE, YOU ACCEPT, WITHOUT LIMITATION, ALL OF THESE TERMS AND CONDITIONS.
+
+ 
+
+We reserve the right to change these terms and conditions at any time. All changes or updates to the Terms & Conditions will be done so by a posting of a new and modified version on our site. By using our web site, you agree in advance that each use will be subject to the aplicable Terms & Conditions. By using our web site, you accept its Terms & Conditions and Privacy Statement set forth below. If you do not agree with these policies, please discontinue using this site immediately.
+
+1.    Online Services Agreement
+
+1.1.  This Agreement is made by and between Online Truva Trade (“Our site”) and you. This Agreement aplies to both our site and trading platform, and to the electronic content and / or software currently contained on our site that provides the customers with real-time information on exchange rates of currencies, and the program transaction services on the forex market via internet, telephone or fax, and any other features, content or services that Online Truva Trade may add later (the “Services”).
+
+ 
+
+2.    Membership eligibility
+
+2.1.  Services are available and reserved only for individuals or businesses that can establish a legally binding contract under the laws aplicable in their country of residence. Without limiting the undermentioned terms, our Services are not available to people under the age of 18 or who have not attained the legal age (“Minors”). If you are a minor, you cannot use this service. PLEASE DO NOT USE THIS SITE IF YOU ARE NOT QUALIFIED.
+
+2.2.  To avoid any doubt, we disclaim any liability for unauthorized use by minors of our Services in any manner or another. In addition, our Services are available only for people who have experience and sufficient knowledge in financial matters, and are able to evaluate the benefits and risks of acquiring financial contracts via this site. You are solely responsible for any decision made by you based on the content of our site.
+
+2.3.  Without derogating from the above-mentioned provision, we disclaim any responsibility for auditing and/or checking your level of knowledge and experience, and any liability for damages or loss suffered as a direct result from your use of our site. This also aplies to any transaction and/or use of our Services. Without limiting the above-mentioned provisions, our Services are not available in areas where their use is illegal. Online Truva Trade reserves the right to refuse and/or cancel access to its Services to anyone at its sole convenience.
+
+ 
+
+3.     Registration Information and Requirements.
+
+3.1.  When registering for a Online Truva Trade account, you will have to provide certain identifying information. You are responsible for the security of your account’s login and password with Online Truva Trade. You are solely responsible for any damage caused by reason of any act or omission resulting in improper or illegal use of your account.
+
+3.2.  You agree to provide accurate and complete information about yourself during the registration process and you also agree not to impersonate another person or entity, and not to hide your identity from Online Truva Trade for any reason whatsoever. If you register as a commercial entity, you declare that you have the required authority to bind that entity to this agreement. Online Truva Trade treats carefully the information you provide to us according to the disclosure of information provided during the registration process and privacy policy.
+
+ 
+
+ 
+
+Legal restrictions
+
+  Without limiting the undermentioned provisions, you understand that laws regarding financial contracts vary throughout the world, and it is your responsibility to make sure you properly comply with any law, regulation or guideline in your country of residence regarding the use of our site. To avoid any doubt, the ability to access our site does not necessarily mean that our services and/or your activities through our site are legal under the laws, regulations or directives relevant to your country of residence. You hereby declare that the money in your Online Truva Trade account does not come from any illegal or criminal activity.
+
+ 
+
+5.    License limitations
+
+5.1.  Online Truva Trade grants you a limited non-exclusive, non-transferable license to access and use our site (the “License”). The license is subject to your compliance with the terms of this agreement. You agree not to resell or make available our site to any other person, and will not copy any documents contained on our site for resale or for any other purpose without the prior written consent of Online Truva Trade.
+To avoid any doubt, you will be liable and bound by any unauthorized use of our site, in violation of this section. You agree to use all the information received from the information systems Online Truva Trade for the sole purpose of performing transactions in the only limits of our site.
+
+5.2.  You also agree not to use electronic communication feature of a service on our site for any illegal, abusive, intrusive, obscene, threatening or hateful purpose, as well as harassment and vilification in the privacy of others. The license granted hereunder shall terminate if Online Truva Trade considers that any information provided by you, including your e-mail is no longer current or accurate, or if you fail to comply with any term or condition of this agreement and all rules and guidelines for each service. It will be the same if Online Truva Trade determines that you committed a crime on the Online Truva Trade trading platform (including without limitation the conclusion of a transaction outside the market rates). If such a violation occurs, you agree to cease accessing the services. You agree that Online Truva Trade, in its sole discretion and with or without notice, may terminate your access to all or part of our Services, close any open transaction and remove and discard any information or content within a service.
+
+ 
+
+6.      Risk Disclosure.
+
+6.1.  You agree to use our site at your own risk. Without limiting the undermentioned provisions, the services provided on this site is intended only to customers who are able to withstand the loss of any money they invest and who understand the risks and have experience in taking risks in financial markets. The possibility exists that you could endure a loss of some or all of your initial investment and hence you should not invest money that you cannot afford to lose. You should be aware of all the risks related to crypto and forex trading, and solicit advice from an independent financial advisor in case of doubts.
+
+7.    Market Data.
+
+7.1.  Through one or more of our services, Online Truva Trade can make available to you a wide range of financial information that is generated internally from agents, supliers or partners (“Third Party Providers”). This includes, but is not limited to financial market data, quotes and news, analyst opinions and research reports, graphs and data (“Financial Information”).
+
+7.2.  The financial information provided on this site is not intentional investment advice. Online Truva Trade offers financial information only as a service. Online Truva Trade and its Third Party Providers do not warrant the accuracy, timeliness, completeness or correct sequencing of the financial information, or results of your use of this financial information. The financial information may promptly become unreliable for various reasons, including, for instance, changes in market conditions or economic circumstances. Neither Online Truva Trade nor the third party providers are required to update the information or opinions included in the financial information, and we can interrupt the flow of financial information at any time without notice.
+
+7.3.  It is your responsibility to verify the reliability of the information on our site and its suitability for your needs. We exclude all liability for any claim, damage or loss of any kind caused by information contained in our site or referenced by our site.
+
+ 
+
+8.    Hyper Links.
+
+8.1.  Online Truva Trade may offer a link to other websites that are provided or controlled by third parties. Such link to a site or sites is neither an endorsement or an aproval nor a sponsorship or an affiliation to such site, its owners or its providers. Online Truva Trade recommends you make sure you understand the risks associated with the use of such sites before retrieving, using or purchasing via the Internet. Links to these sites are provided solely for your convenience and you agree not to hold Online Truva Trade responsible for any loss or damage due to the use or reliance on any content, products or services available on other sites.
+
+ 
+
+9.    Trading Cancellation.
+
+9.1.  Online Truva Trade reserves the right in its sole discretion, to refuse or cancel services, and/or refuse to distribute profits to any person for legitimate reasons, including, without limitation:
+
+9.1.1.    If Online Truva Trade has reason to believe that a person’s activities on our site may be illegal
+
+9.1.2.    If Online Truva Trade may be harmed by any fiscal or pecuniary damage due to anyone’s activities
+
+9.1.3.    If Online Truva Trade considers that one or more operations on our site were made in violation of this agreement
+
+ 
+
+10.  Payment procedure.
+
+10.1.Online Truva Trade’s finance department supervises every withdrawal request submitted. Identification documents must be submitted for any withdrawal. There is no fee relating to withdrawal by credit card, but any withdrawal by wire transfer will be charged in the amount of $30.
+
+10.2.Once a withdrawal request has been submitted, it may take up to 5 business days for it to be processed. Once processed, the funds will apear in your bank account. As to when the funds will be visible will depend on your bank.
+
+10.3.The minimum amount required to withdrawal earnings is 100, depending on the currency to which your account is set. Transactions made on www.Online Truva Trade will be represented on your billing statement as www.Online Truva Trade phone:44-2035192136.
+
+ 
+
+11.  Bonuses.
+
+11.1.All bonuses and promotions offered by Online Truva Trade are subject to several conditions, including but not limited to minimum deposit amounts, minimum trading volume and any other requirements detailed within the specific offer.
+
+11.2.In order to redeem a bonus, clients must meet Online Truva Trade's required trading volume.
+
+11.3.Standard required trading volume necessary to redeem a bonus is 30 times the amount of the bonus
+
+11.4.Online Truva Trade reserves the right to delay or withhold withdrawal of bonuses if any indication of deceptive or fraudulent activity, including but not limited to fraud, manipulation, cash back arbitrage, etc. based on the provisions of the bonus will result in a cancellation of all funds earned in the bonus and the termination of the client account.
+
+11.5.If traders withdraw funds before reaching the required trading volume, the bonus and profits earned will become null and void, and will be deducted from the trader’s account. You may withdraw all remaining funds from your account up to, but not exceeding the amount of the deposit.
+
+11.5.If trader's account has passed it's trading limit for a particular account type, the user will be required to make a deposit to upgrade his account. Please note that funds deposited for upgrade can be procesed as withdrawal. Please contact suport for information about trading limits for each account type
+
+11.6.Within the client's account, the funds that are deposited are kept separate from the bonuses received. All investments are first drawn from the deposit balance and only then, funds are drawn from the bonuses.
+
+11.6.1.  Online Truva Trade offers the following Refer-A-Friend (RAF) bonus:
+
+                                      i.        A new client is referred to Online Truva Trade by a current client.
+
+                                     ii.        The current client must have an active account and have conducted at least US$ 200 worth of trades on the Online Truva Trade site in order to be eligible. A client whose account has been blocked, closed or self-excluded from promotional offers at the time of the referral are not eligible for the RAF bonus.
+
+                                    iii.        Only new clients who have never before opened accounts on the Online Truva Trade site are eligible
+
+11.6.2.  When the new client opens a Online Truva Trade account and deposits a minimum of $200, both he and the client who made the referral will receive a bonus of US$ 50.
+
+11.6.3.  This bonus can only be redeemed after both the old and the new clients have traded a minimum of 30 times the bonus amount on the Online Truva Trade site.
+
+11.6.4.  Online Truva Trade has the sole discretion to determine the allocation of suplementary bonuses and other benefits.
+
+11.7.The 50 (USD) RAF bonus will be credited to the user accounts of the current and new clients within two business days after Online Truva Trade has aproved the new client's membership and initial deposit, in accordance with the terms and conditions laid out in this section.
+
+11.8.There is no limit as to how many new clients an active client may refer, but you cannot receive more than one RAF bonus for each new client referred to, and aproved by Online Truva Trade.
+
+11.9.Online Truva Trade will not accept any apeals initiated by the client or by a third party regarding RAF bonuses. All decisions made by Online Truva Trade regarding the awarding of an RAF bonus, as well as any conditions related to the bonus, are final and non-negotiable.
+
+11.10.All conditions stipulated in the Bonus super-section are aplicable to the RAF Bonus as well.
+
+ 
+
+12.  Limited Liability.
+
+12.1.We are committed to ensure continuity of the services on our site. However, we assume no responsibility for any error, omission, deletion, interruption, delay, defect, in operation or transmission, communications line failure, theft or destruction or unauthorized access or alteration of our site or services. We decline responsibility for any problems or technical malfunction of any telephone network or lines, computer online systems, servers or providers, hardware or software, or any technical failure because of technical problems or traffic congestion on the Internet, our site or any service.
+To the extent permitted by aplicable law, in no event shall we be liable for any loss or damage arising from use of our site or services for any content posted on or through our site or services, or the conduct of all users of our site or services, whether online or offline.
+
+ 
+
+IN NO EVENT Online Truva Trade OR ANY OF ITS DIRECTORS, OFFICERS, EMPLOYEES OR AGENTS SHALL BE LIABLE FOR ANY DAMAGES WHATSOEVER TO YOU, INCLUDING, WITHOUT LIMITATION, INDIRECT, INCIDENTAL, CONSEQUENTIAL OR PUNITIVE DAMAGES ARISING OUT OF OR RELATED TO THE USE OF OUR SITE OR THE SERVICES, INCLUDING WITHOUT LIMITATION THE QUALITY OF THE USEFULNESS OF INFORMATION PROVIDED THROUGH OR AS PART OF OUR SITE OR ANY INVESTMENT DECISION MAKING ON THE BASIS OF THE INFORMATION, WHETHER THE DAMAGES WERE PREDICTABLE OR NOT AND WHETHER OR NOT Online Truva Trade HAS BEEN ACQUAINTED WITH THE POSSIBILITY OF SUCH DAMAGES. LIMITATION OF LIABILITY SHALL ApLY TO THE FULLEST EXTENT PERMITTED BY LAW IN THE ApLICABLE JURISDICTION AND IN NO EVENT SHALL Online Truva Trade CUMULATIVE LIABILITY TO YOU EXCEED THE AMOUNT OF MONEY YOU TRANSFERRED OR DEPOSITED IN YOUR ACCOUNT ON OUR SITE IN CONNECTION WITH THE TRANSACTION GIVING RISE TO SUCH LIABILITY.
+
+ 
+
+13.  AML Procedures.
+
+13.1.Prohibited uses: It is prohibited to abuse this site for purposes of money laundering. Online Truva Trade employs best practice anti-money laundering. Online Truva Trade reserves the right to refuse and to terminate any business relationship, and to cancel any operation of customers who do not comply with the requirements of anti-money laundering:
+
+13.1.1.  Online traders should provide all information required for registration.
+
+13.1.2.  The earnings will be paid to the person who first registered for an account online.
+
+13.1.3.  If your account has traded automatically, you will be required to make payment for your signal fees before withdrawal, please note this fee cannot be withdrawn from your balance, the value of your signal fee can be found in your accounts page or the bottom left.
+
+13.1.4.  When a customer maintains an account through wire transfers, the gains will be distributed to the sole owner of the originating bank account. When you make deposits in this way, it is the responsibility of the live trader to ensure that the trader’s account number and the registered name of the account owner accompany every transfer to Online Truva Trade.
+
+13.1.5.  When a deposit is made using a credit card or debit card, the winnings will be distributed solely to the person whose name apears on the card used to make the deposit and will not be reimbursed on another card.
+
+13.1.6.  Only one account is allowed per person. No gains can be levied on accounts opened under false names or multiple accounts opened by the same person.
+
+13.1.7.  From time to time, Online Truva Trade may at its sole discretion, require from a customer to provide additional proof of identity such as a notarized copy of passport or other means of identity verification. Online Truva Trade may also, at its sole discretion, suspend an account until the required proof is provided.
+
+ 
+
+14.  Intellectual Property.
+
+14.1.All content, including every trademark, service mark, trade name, logo and icon are the property of Online Truva Trade or its affiliates or agents and are protected by law and international treaties and provisions relating to copyright. You agree not to remove copyright notices or other indications of protected intellectual property rights of any material you print or download from our site. You will not obtain intellectual property rights, or any right or license to use such material or our site, other than those set forth herein.
+
+14.2.Images displayed on our site are property of Online Truva Trade. You agree not to upload, post, distribute or reproduce any information, software or other material protected by copyright or other intellectual property right (including rights of publicity and privacy) without first obtaining permission from the copyright owner and the prior written consent of Online Truva Trade.
+
+ 
+
+15.  Indemnification.
+
+15.1.You agree to defend and indemnify our company and its officers, directors, employees, and agents and to hold them harmless from and against any and all claims, liabilities, damages, losses, and expenses, including without limitation reasonable attorney’s fees and costs, arising out of / or in any way connected with your access to use of our site or services; your violation of any of the terms in this agreement; or your breach of any aplicable laws or regulations
+
+ 
+
+16.  Term and Termination.
+
+16.1.The term of the Agreement shall be unlimited however, our company will be allowed to terminate this agreement at any time by notice to you. As of termination, you shall not be able to carry out new transactions.
+
+ 
+
+17.  General Clause.
+
+Our company (Online Truva Trade) will not be liable in any way to any persons in the event of force majeure, or for the act of any government or legal authority. This agreement shall be governed by and interpreted in accordance with the laws of London excluding that body of law pertaining to conflict of laws. Any legal action or proceeding arising under this agreement will be brought exclusively in courts located in London, and the parties hereby irrevocably consent to the personal jurisdiction and venue therein.
+In the event that any provision in this agre
+
+        17.2.Our company may assign this Agreement or any rights and/or obligations without your consent. Our company may amend the terms of this Agreement from time to time by posting the amended terms on our site. You are responsible for checking whether the agreement was amended. Any amendment shall come into force as of the day it was published on our site. If you do not agree to be bound by the changes to the terms and conditions of this agreement, do not use or access our services, and inform us in writing immediately.
+      </p>
+    </div>
+  </div>
+</section>
+  <!-- Support Card -->
+  <section style="width: 100vw; padding: 2rem 1rem; background-color: var(--background);">
+    <div style="max-width: 420px; margin: 0 auto;">
+      <div class="support-card">
+        <div class="title">At Online Truva Trade we got you covered!</div>
+        <div class="description">Your success with us is our primary concern...</div>
+        <button class="cta-btn">Register now</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer-left">
+    <div class="footer-content">
+      <h3>Links</h3>
+      <ul>
+        <li><a href="/register">Register</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/demo">Demo</a></li>
+        <li><a href="/binary-options">Binary Options</a></li>
+      </ul>
+      <h3>Company</h3>
+      <ul>
+        <li><a href="/about-us">About Us</a></li>
+        <li><a href="/contact-us">Contact Us</a></li>
+        <li><a href="/faq">FAQ</a></li>
+        <li><a href="/legal-info">Legal Info</a></li>
+      </ul>
+      <h3>Legal Info</h3>
+      <ul>
+        <li><a href="/terms-of-service">Terms of Service</a></li>
+        <li><a href="/privacy-policy">Privacy Policy</a></li>
+        <li><a href="/banking">Banking</a></li>
+        <li><a href="/disclaimer">Disclaimer</a></li>
+      </ul>
+      <h3>Contact Information</h3>
+      <p>Email: <a href="mailto:support@online.truvatrade.org">support@online.truvatrade.org</a></p>
+      <h3>Quick Links</h3>
+      <ul class="quick-links">
+        <li><a href="/register">Register</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/demo">Demo</a></li>
+      </ul>
+      <div class="footer-note">
+        <p>Use of this Site is subject to express terms of use. By using this site, you signify that you agree to be bound by these.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    function toggleSidebar(show) {
+      const sidebar = document.getElementById('truva-sidebar');
+      const overlay = document.querySelector('.truva-sidebar-overlay');
+      sidebar.classList.toggle('active', show);
+      overlay.style.display = show ? 'block' : 'none';
+    }
+
+    const langSelector = document.getElementById('language-selector');
+    const langDropdown = document.getElementById('language-dropdown');
+    const currentLangLabel = document.getElementById('current-lang-label');
+    const accountBtn = document.getElementById('account-btn');
+
+    langSelector.addEventListener('click', () => {
+      langDropdown.style.display = langDropdown.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!langSelector.contains(e.target) && !langDropdown.contains(e.target)) {
+        langDropdown.style.display = 'none';
+      }
+    });
+
+    langDropdown.querySelectorAll('div[data-lang]').forEach(item => {
+      item.addEventListener('click', () => {
+        const lang = item.getAttribute('data-lang');
+        const domain = location.hostname.split('.').slice(-2).join('.');
+        document.cookie = `googtrans=/en/${lang}; path=/; domain=.${domain}`;
+        location.reload();
+      });
+    });
+
+    function updateLanguageLabel() {
+      const match = document.cookie.match(/googtrans=\/en\/([a-zA-Z-]+)/);
+      const langCode = match ? match[1] : 'en';
+      const map = {
+        'en': 'English (US)', 'en-GB': 'English (UK)', 'es': 'Spanish', 'fr': 'French',
+        'de': 'German', 'it': 'Italian', 'zh-CN': 'Chinese', 'ja': 'Japanese', 'ru': 'Russian'
+      };
+      const flagMap = {
+        'en': '🇺🇸', 'en-GB': '🇬🇧', 'es': '🇪🇸', 'fr': '🇫🇷',
+        'de': '🇩🇪', 'it': '🇮🇹', 'zh-CN': '🇨🇳', 'ja': '🇯🇵', 'ru': '🇷🇺'
+      };
+      currentLangLabel.textContent = `${flagMap[langCode] || '🇺🇸'} ${map[langCode] || 'English (US)'}`;
+    }
+
+    updateLanguageLabel();
+
+    accountBtn.addEventListener('click', () => {
+      window.location.href = '/account';
+    });
+  </script>
+</body>

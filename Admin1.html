@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title> Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 2rem;
+      font-family: 'Inter', sans-serif;
+      background-color: #0f172a;
+      color: #f1f5f9;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .card {
+      background-color: #1e293b;
+      padding: 2rem;
+      border-radius: 1rem;
+      width: 100%;
+      max-width: 720px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      overflow-y: auto;
+      max-height: 90vh;
+    }
+
+    h1, h2 {
+      color: #38bdf8;
+      margin-top: 0;
+    }
+
+    section {
+      margin-bottom: 2rem;
+      border-top: 1px solid #334155;
+      padding-top: 1rem;
+    }
+
+    input, select, textarea, button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.6rem;
+      border-radius: 0.5rem;
+      border: none;
+      background-color: #334155;
+      color: #f1f5f9;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #0ea5e9;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0284c7;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    #transactions {
+      margin-top: 1rem;
+    }
+
+    .divider {
+      height: 1px;
+      background: #334155;
+      margin: 1rem 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>ADD Panel</h1>
+
+    <!-- 🔍 Search User -->
+    <section>
+      <h2>Search User by Email</h2>
+      <input type="email" id="searchEmail" placeholder="User Email" />
+      <button onclick="getUserByEmail()">Search</button>
+      <p id="userIdDisplay"></p>
+    </section>
+
+    <!-- 📄 User Info -->
+    <section>
+      <h2>User Info</h2>
+      <p>Email: <span id="emailDisplay"></span></p>
+      <p>Balance: <span id="balanceDisplay"></span></p>
+      <p>Active Deposit: <span id="activeDepositDisplay"></span></p>
+      <p>Earned: <span id="earnedDisplay"></span></p>
+      <p>Investment: <span id="investmentDisplay"></span></p>
+      <p>Is Banned: <span id="banStatusDisplay"></span></p>
+      <div id="transactions"></div>
+    </section>
+
+    <!-- ➕➖ Adjust Funds -->
+    <section>
+      <h2>Modify Funds</h2>
+      <input type="text" id="uid" placeholder="User ID" />
+      <input type="number" id="amount" placeholder="Amount" />
+      <select id="field">
+        <option value="balance">Balance</option>
+        <option value="earned">Earned</option>
+        <option value="investment">Investment</option>
+      </select>
+      <input type="text" id="note" placeholder="Note (optional)" />
+      <button onclick="addFunds()">Add</button>
+      <button onclick="removeFunds()">Remove</button>
+    </section>
+
+    <!-- 🔐 Ban/Unban -->
+    <section>
+      <h2>User Controls</h2>
+      <button onclick="toggleBan()">Ban/Unban User</button>
+      <button onclick="deleteUser()">Delete User</button>
+    </section>
+
+    <!-- 📧 Send Email -->
+    <section>
+      <h2>Send Email</h2>
+      <form action="https://formspree.io/f/{your_form_id}" method="POST">
+        <input type="email" name="email" placeholder="User Email" required />
+        <input type="text" name="subject" placeholder="Subject" required />
+        <textarea name="message" placeholder="Message" required></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </section>
+
+    <!-- 💸 Withdrawals -->
+    <section>
+      <h2>Approve Withdrawal</h2>
+      <input type="text" id="withdrawUid" placeholder="User ID" />
+      <input type="text" id="withdrawEmail" placeholder="Email" />
+      <input type="text" id="withdrawAmount" placeholder="Amount" />
+      <input type="text" id="withdrawWallet" placeholder="Wallet Address" />
+      <input type="text" id="withdrawCurrency" placeholder="Currency" />
+      <button onclick="approveWithdrawal()">Approve</button>
+    </section>
+
+    <!-- 🧪 Fake Withdrawal -->
+    <section>
+      <h2>Fake Withdrawal Log</h2>
+      <input type="text" id="fakeEmail" placeholder="Email" />
+      <input type="text" id="fakeAmount" placeholder="Amount" />
+      <input type="text" id="fakeWallet" placeholder="Wallet Address" />
+      <input type="text" id="fakeCurrency" placeholder="Currency" />
+      <button onclick="createFakeWithdrawal()">Create</button>
+    </section>
+
+    <!-- 📤 Export -->
+    <section>
+      <h2>Export</h2>
+      <button onclick="exportUsers()">Export Users to CSV</button>
+      <button onclick="exportWithdrawals()">Export Withdrawals to CSV</button>
+    </section>
+  </div>
+
+  <!-- 🔌 Firebase and Logic -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    async function getUserByEmail() {
+      const email = document.getElementById("searchEmail").value;
+      const snapshot = await db.collection("users").where("email", "==", email).get();
+      if (snapshot.empty) return alert("User not found");
+      const doc = snapshot.docs[0];
+      document.getElementById("uid").value = doc.id;
+      document.getElementById("emailDisplay").textContent = doc.data().email;
+      document.getElementById("balanceDisplay").textContent = doc.data().balance;
+      document.getElementById("activeDepositDisplay").textContent = doc.data().activeDeposit;
+      document.getElementById("earnedDisplay").textContent = doc.data().earned;
+      document.getElementById("investmentDisplay").textContent = doc.data().investment;
+      document.getElementById("banStatusDisplay").textContent = doc.data().isBanned || false;
+    }
+
+    async function addFunds() {
+      const uid = document.getElementById("uid").value;
+      const field = document.getElementById("field").value;
+      const amount = parseFloat(document.getElementById("amount").value);
+      const userRef = db.collection("users").doc(uid);
+      await userRef.update({ [field]: firebase.firestore.FieldValue.increment(amount) });
+      alert("Funds added!");
+    }
+
+    async function removeFunds() {
+      const uid = document.getElementById("uid").value;
+      const field = document.getElementById("field").value;
+      const amount = parseFloat(document.getElementById("amount").value);
+      const userRef = db.collection("users").doc(uid);
+      await userRef.update({ [field]: firebase.firestore.FieldValue.increment(-amount) });
+      alert("Funds removed!");
+    }
+
+    async function toggleBan() {
+      const uid = document.getElementById("uid").value;
+      const ref = db.collection("users").doc(uid);
+      const snap = await ref.get();
+      const current = snap.data().isBanned || false;
+      await ref.update({ isBanned: !current });
+      alert(current ? "User unbanned" : "User banned");
+    }
+
+    async function deleteUser() {
+      const uid = document.getElementById("uid").value;
+      await db.collection("users").doc(uid).delete();
+      alert("User deleted");
+    }
+
+    async function approveWithdrawal() {
+      const data = {
+        uid: document.getElementById("withdrawUid").value,
+        email: document.getElementById("withdrawEmail").value,
+        amount: document.getElementById("withdrawAmount").value,
+        wallet: document.getElementById("withdrawWallet").value,
+        currency: document.getElementById("withdrawCurrency").value,
+        date: new Date().toISOString()
+      };
+      await db.collection("withdrawals").add(data);
+      alert("Withdrawal approved");
+    }
+
+    async function createFakeWithdrawal() {
+      const data = {
+        email: document.getElementById("fakeEmail").value,
+        amount: document.getElementById("fakeAmount").value,
+        wallet: document.getElementById("fakeWallet").value,
+        currency: document.getElementById("fakeCurrency").value,
+        fake: true,
+        date: new Date().toISOString()
+      };
+      await db.collection("withdrawals").add(data);
+      alert("Fake withdrawal logged");
+    }
+
+    async function exportUsers() {
+      const snapshot = await db.collection("users").get();
+      let csv = "UID,Email,Balance,Earned,Investment\n";
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        csv += `${doc.id},${d.email},${d.balance},${d.earned},${d.investment}\n`;
+      });
+      downloadCSV(csv, "users.csv");
+    }
+
+    async function exportWithdrawals() {
+      const snapshot = await db.collection("withdrawals").get();
+      let csv = "Email,Amount,Wallet,Currency,Date\n";
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        csv += `${d.email},${d.amount},${d.wallet},${d.currency},${d.date}\n`;
+      });
+      downloadCSV(csv, "withdrawals.csv");
+    }
+
+    function downloadCSV(csv, filename) {
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      a.click();
+    }
+  </script>
+</body>
+</html>

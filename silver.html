@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Silver Plan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #0b1120;
+      color: white;
+    }
+
+    .breadcrumb {
+      padding: 1rem 1.5rem;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+    }
+
+    .card, .buy-card {
+      background-color: #1e293b;
+      border-radius: 16px;
+      margin: 1rem;
+      padding: 1rem;
+    }
+
+    .card-header {
+      background-color: #334155;
+      text-align: center;
+      padding: 1rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-bottom: 1px solid #475569;
+    }
+
+    .card-body {
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .percentage {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .info-text {
+      font-size: 0.95rem;
+      margin: 0.25rem 0;
+      color: #cbd5e1;
+    }
+
+    .go-back-btn {
+      display: block;
+      width: 100%;
+      margin-top: 1.5rem;
+      padding: 0.75rem;
+      background-color: #6d28d9;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .go-back-btn:hover {
+      background-color: #7c3aed;
+    }
+
+    .buy-header {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .input-group {
+      display: flex;
+      background-color: white;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    input[type="number"] {
+      flex: 1;
+      border: none;
+      padding: 0.75rem;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .currency {
+      background-color: #e5e7eb;
+      padding: 0.75rem 1rem;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #1f2937;
+    }
+
+    .pay-btn {
+      margin-top: 1rem;
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #6d28d9;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .pay-btn:hover {
+      background-color: #7c3aed;
+    }
+
+    .balance-display {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .status-message {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-align: center;
+      transition: all 0.3s ease-in-out;
+      display: none;
+    }
+
+    .status-success {
+      background-color: #16a34a;
+      color: white;
+    }
+
+    .status-error {
+      background-color: #dc2626;
+      color: white;
+    }
+
+    .status-processing {
+      background-color: #0ea5e9;
+      color: white;
+    }
+
+    @media (max-width: 480px) {
+      .breadcrumb {
+        padding: 1rem;
+        font-size: 0.85rem;
+      }
+
+      .card,
+      .buy-card {
+        margin: 1rem 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="breadcrumb">Home / Invest</div>
+
+  <!-- Silver Plan Card -->
+  <div class="card">
+    <div class="card-header">SILVER ACCOUNT</div>
+    <div class="card-body">
+      <div class="percentage">50%</div>
+      <div class="info-text">After 4 DAYS</div>
+      <div class="info-text">Minimum Amount: $5,000</div>
+      <div class="info-text">Maximum Amount: $15,000</div>
+      <div class="info-text">Instant Withdraw</div>
+      <div class="balance-display">Balance: $<span id="balance-amount">0.00</span></div>
+      <a href="Investment.html" class="go-back-btn"><i class="fas fa-paper-plane"></i> Go back</a>
+    </div>
+  </div>
+
+  <!-- Buy In Section -->
+  <div class="buy-card">
+    <div class="buy-header">Buy In</div>
+    <div class="input-group">
+      <input type="number" id="invest-amount" placeholder="Enter Investment Amount" min="5000" max="15000" />
+      <div class="currency">$</div>
+    </div>
+    <button class="pay-btn" id="invest-btn">Pay Now <i class="fas fa-paper-plane"></i></button>
+    <div id="status-message" class="status-message"></div>
+  </div>
+
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyB89FVW7DW8xdASCAyNsTN71zK5p_YMSVk",
+      authDomain: "titanium-fx.firebaseapp.com",
+      projectId: "titanium-fx",
+      storageBucket: "titanium-fx.appspot.com",
+      messagingSenderId: "623119248603",
+      appId: "1:623119248603:web:824489ee0033bef9bdf0fe"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const investInput = document.getElementById('invest-amount');
+    const investButton = document.getElementById('invest-btn');
+    const statusMessage = document.getElementById('status-message');
+    const balanceAmount = document.getElementById('balance-amount');
+
+    let currentBalance = 0;
+
+    function showStatus(message, type = "processing") {
+      statusMessage.textContent = message;
+      statusMessage.className = `status-message status-${type}`;
+      statusMessage.style.display = "block";
+    }
+
+    function hideStatus(delay = 3000) {
+      setTimeout(() => {
+        statusMessage.style.display = "none";
+      }, delay);
+    }
+
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        const doc = await db.collection("users").doc(user.uid).get();
+        if (doc.exists) {
+          currentBalance = doc.data().balance || 0;
+          balanceAmount.textContent = currentBalance.toFixed(2);
+        }
+      } else {
+        showStatus("User not signed in.", "error");
+      }
+    });
+
+    investButton.addEventListener('click', async () => {
+      const amount = parseFloat(investInput.value);
+      if (isNaN(amount) || amount < 5000 || amount > 15000) {
+        showStatus("Enter a valid amount between $5,000 and $15,000.", "error");
+        hideStatus();
+        return;
+      }
+
+      if (amount > currentBalance) {
+        showStatus("Insufficient balance.", "error");
+        hideStatus();
+        return;
+      }
+
+      showStatus("Processing investment...", "processing");
+
+      try {
+        const user = auth.currentUser;
+        const userRef = db.collection("users").doc(user.uid);
+        const newBalance = currentBalance - amount;
+
+        await userRef.update({ balance: newBalance });
+        await userRef.collection("investments").add({
+          amount: amount,
+          timestamp: new Date(),
+          plan: "silver",
+          expectedReturn: amount * 1.5,
+          status: "pending"
+        });
+
+        currentBalance = newBalance;
+        balanceAmount.textContent = currentBalance.toFixed(2);
+        investInput.value = "";
+
+        showStatus(`Success! You’ve invested $${amount.toFixed(2)}.`, "success");
+        hideStatus(4000);
+      } catch (err) {
+        console.error(err);
+        showStatus("Failed to invest. Try again.", "error");
+        hideStatus();
+      }
+    });
+  </script>
+
+</body>
+</html>

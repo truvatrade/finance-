@@ -1,0 +1,471 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Truvatrade</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --background: #0b1120;
+      --primary: #ffffff;
+      --accent: #60a5fa;
+      --text-main: #ffffff;
+      --text-muted: #94a3b8;
+      --card-bg: #1e293b;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--background);
+      color: var(--text-main);
+      font-family: "Segoe UI", "Helvetica Neue", system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    .top-bar {
+      background-color: var(--card-bg);
+      color: var(--text-main);
+      font-size: 0.85rem;
+      padding: 0.5rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #334155;
+      position: relative;
+    }
+    .top-bar-item {
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 4px;
+      transition: background 0.3s ease;
+    }
+    .top-bar-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .language-dropdown {
+      display: none;
+      position: absolute;
+      top: 50px;
+      left: 20px;
+      background: #1c2433;
+      border: 1px solid #333;
+      border-radius: 6px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      color: #fff;
+      min-width: 180px;
+      z-index: 1000;
+    }
+    .language-dropdown div {
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .language-dropdown div:hover {
+      background: #2a3142;
+    }
+    header {
+      background-color: var(--background);
+      padding: 1.5rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo-rect {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 8px;
+    }
+    .menu-icon {
+      width: 32px;
+      height: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+    .menu-icon div {
+      height: 4px;
+      background-color: var(--text-main);
+      border-radius: 2px;
+    }
+    .plans-card, .support-card {
+      background-color: #111827;
+      border-radius: 1.25rem;
+      padding: 1.8rem;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      width: 100%;
+    }
+    .plans-card .title, .support-card .title {
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+      line-height: 1.4;
+    }
+    .plans-card .breadcrumb {
+      font-size: 0.85rem;
+      color: #9ca3af;
+      margin-bottom: 1.2rem;
+    }
+    .support-card .description {
+      font-size: 0.9rem;
+      color: #d1d5db;
+      margin-bottom: 1.3rem;
+      line-height: 1.5;
+    }
+    .cta-btn {
+      width: 100%;
+      background-color: #3b82f6;
+      color: #fff;
+      padding: 0.85rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    .plans-card .cta-btn:hover {
+      background-color: #2563eb;
+    }
+    .support-card .cta-btn {
+      background-color: #22c55e;
+    }
+    .support-card .cta-btn:hover {
+      background-color: #16a34a;
+    }
+    .footer-left {
+      background-color: #0f172a;
+      color: #cbd5e1;
+      padding: 3rem 1.5rem;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .footer-content {
+      max-width: 1100px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    .footer-content h3 {
+      color: #38bdf8;
+      font-size: 1.2rem;
+      margin-top: 2rem;
+      margin-bottom: 0.8rem;
+    }
+    .footer-content ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 1rem;
+    }
+    .footer-content ul li {
+      margin-bottom: 0.4rem;
+    }
+    .footer-content a {
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+    .footer-content a:hover {
+      color: #38bdf8;
+    }
+    .footer-content p {
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+    .quick-links {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .footer-note {
+      border-top: 1px solid #334155;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+    .truva-sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 998;
+    }
+    .truva-sidebar {
+      position: fixed;
+      top: 0;
+      left: -260px;
+      width: 260px;
+      height: 100%;
+      background-color: #0b1120;
+      color: white;
+      z-index: 999;
+      transition: left 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .truva-sidebar.active {
+      left: 0;
+    }
+    .truva-sidebar-header {
+      padding: 20px;
+      border-bottom: 1px solid #333;
+      font-size: 22px;
+      font-weight: bold;
+    }
+    .truva-sidebar-menu {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .truva-sidebar-menu li a {
+      display: flex;
+      align-items: center;
+      padding: 15px 20px;
+      gap: 10px;
+      color: white;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+    .truva-sidebar-menu li a:hover {
+      background: #1f2937;
+    }
+    .truva-icon {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+    }
+    .truva-auth-buttons {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .truva-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      font-weight: 600;
+      gap: 8px;
+      text-decoration: none;
+      border-radius: 6px;
+    }
+    .truva-login-btn {
+      background: #1f2937;
+      color: white;
+    }
+    .truva-signup-btn {
+      background: #10b981;
+      color: white;
+    }
+    .truva-login-btn:hover {
+      background: #374151;
+    }
+    .truva-signup-btn:hover {
+      background: #059669;
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div id="language-selector" class="top-bar-item" role="button">
+      🌐 <span id="current-lang-label">🇺🇸 English (US)</span> ▼
+    </div>
+    <div id="account-btn" class="top-bar-item" role="button">My Account</div>
+    <div id="language-dropdown" class="language-dropdown" role="menu">
+      <div data-lang="en">🇺🇸 English (US)</div>
+      <div data-lang="en-GB">🇬🇧 English (UK)</div>
+      <div data-lang="es">🇪🇸 Spanish</div>
+      <div data-lang="fr">🇫🇷 French</div>
+      <div data-lang="de">🇩🇪 German</div>
+      <div data-lang="it">🇮🇹 Italian</div>
+      <div data-lang="zh-CN">🇨🇳 Chinese</div>
+      <div data-lang="ja">🇯🇵 Japanese</div>
+      <div data-lang="ru">🇷🇺 Russian</div>
+    </div>
+  </div>
+
+  <!-- Sidebar Overlay -->
+  <div class="truva-sidebar-overlay" onclick="toggleSidebar(false)"></div>
+
+  <!-- Sidebar -->
+  <aside class="truva-sidebar" id="truva-sidebar">
+    <div class="truva-sidebar-header">Truva Trade</div>
+    <ul class="truva-sidebar-menu">
+      <li><a href="/home.html"><svg class="truva-icon" viewBox="0 0 24 24"><path d="M3 9L12 2l9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Home</a></li>
+      <li><a href="/account"><svg class="truva-icon" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a8.38 8.38 0 0 1 13 0"/></svg> Account Type</a></li>
+      <li><a href="/demo"><svg class="truva-icon" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M16 2v4M8 2v4M2 10h20"/></svg> Demo</a></li>
+      <li><a href="/contact"><svg class="truva-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Contact</a></li>
+      <li><a href="/more"><svg class="truva-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg> More</a></li>
+    </ul>
+    <div class="truva-auth-buttons">
+      <a href="/login" class="truva-btn truva-login-btn"><svg class="truva-icon" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/></svg> Login</a>
+      <a href="/register" class="truva-btn truva-signup-btn"><svg class="truva-icon" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg> Signup</a>
+    </div>
+  </aside>
+
+  <!-- Header -->
+  <header>
+    <div class="logo-rect" title="TruvaTrade">
+      <img src="https://res.cloudinary.com/dy65t4t1x/image/upload/v1750736066/squticdpmeefnalovglk.png" alt="TruvaTrade Logo" style="width: 100%; height: 100%; object-fit: contain;" />
+    </div>
+    <div class="menu-icon" onclick="toggleSidebar(true)">
+      <div></div><div></div><div></div>
+    </div>
+  </header>
+
+<!-- Banking Card -->
+<section style="width: 100vw; padding: 2rem 1rem; background-color: var(--background);">
+  <div style="max-width: 420px; margin: 0 auto;">
+    <div class="plans-card">
+      <div class="title">Banking</div>
+      <div class="breadcrumb">Home / Banking</div>
+      <button class="cta-btn">Get started now</button>
+    </div>
+  </div>
+</section>
+
+<!-- Banking Info Section -->
+<section style="width: 100vw; padding: 2rem 1rem; background-color: var(--background); display: flex; justify-content: center;">
+  <div style="max-width: 720px; color: #e2e8f0; font-family: 'Inter', sans-serif; text-align: left;">
+    <h2 style="font-size: 1.75rem; color: #3b82f6; margin-bottom: 1rem;">Banking</h2>
+    <p style="margin-bottom: 1rem;">
+      At Online Truva Trade, we place the utmost importance on safeguarding your private and banking details. Therefore, we have invested in adopting some of the highest security protocols available on the internet. We also offer several methods for deposits and withdrawals. We strive to ensure that every transaction is a convenient and secure transfer. Your accounts can be denominated in any of the following: AUD, CAD, GBP, EUR, and USD.
+    </p>
+    <p style="margin-bottom: 1rem;"><strong>Important:</strong> You will be required to provide proof of identity to the Online Truva Trade Accounting Department before you can carry out any transactions. Our commitment to preventing money laundering and upholding identity regulations is unwavering.</p>
+    <p style="margin-bottom: 1rem;">
+      To deposit, simply choose your preferred method of deposit. It could be an eWallet option, CashU, Wire Transfer, Maestro or Credit Card. After you have made your choice, click on the “Deposit” option while logged into your Online Truva Trade Live Account. If you have any questions about the process, feel free to talk to any of our customer care representatives, who are only a message or call away.
+    </p>
+
+    <h3 style="color: #38bdf8; margin-top: 2rem;">Credit Card</h3>
+    <p style="margin-bottom: 1rem;">
+      Using your credit or debit card to make a deposit into your account is fast, easy and secure. We currently support the following Credit / Debit Cards: Visa, Delta, MasterCard, Diners, and Visa Electron.
+    </p>
+
+    <h3 style="color: #38bdf8; margin-top: 2rem;">Maestro (Switch) and Solo</h3>
+    <p style="margin-bottom: 1rem;">
+      Please note that all Maestro online deposits are authenticated with MasterCard Secure Code. You will have to register with your bank for a 3D code, prior to or during the deposit process.
+    </p>
+
+    <h3 style="color: #38bdf8; margin-top: 2rem;">Wire Transfer</h3>
+    <p>
+      This deposit method is best for individuals that need to send money to their Online Truva Trade account directly from their bank account, removing the need to work with any external payment services. Clients making large deposits often prefer this mode. Please note that wire transfers may attract a fee.
+    </p>
+  </div>
+</section>
+
+  <!-- Support Card -->
+  <section style="width: 100vw; padding: 2rem 1rem; background-color: var(--background);">
+    <div style="max-width: 420px; margin: 0 auto;">
+      <div class="support-card">
+        <div class="title">At Online Truva Trade we got you covered!</div>
+        <div class="description">Your success with us is our primary concern...</div>
+        <button class="cta-btn">Register now</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer-left">
+    <div class="footer-content">
+      <h3>Links</h3>
+      <ul>
+        <li><a href="/register">Register</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/demo">Demo</a></li>
+        <li><a href="/binary-options">Binary Options</a></li>
+      </ul>
+      <h3>Company</h3>
+      <ul>
+        <li><a href="/about-us">About Us</a></li>
+        <li><a href="/contact-us">Contact Us</a></li>
+        <li><a href="/faq">FAQ</a></li>
+        <li><a href="/legal-info">Legal Info</a></li>
+      </ul>
+      <h3>Legal Info</h3>
+      <ul>
+        <li><a href="/terms-of-service">Terms of Service</a></li>
+        <li><a href="/privacy-policy">Privacy Policy</a></li>
+        <li><a href="/banking">Banking</a></li>
+        <li><a href="/disclaimer">Disclaimer</a></li>
+      </ul>
+      <h3>Contact Information</h3>
+      <p>Email: <a href="mailto:support@online.truvatrade.org">support@online.truvatrade.org</a></p>
+      <h3>Quick Links</h3>
+      <ul class="quick-links">
+        <li><a href="/register">Register</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/demo">Demo</a></li>
+      </ul>
+      <div class="footer-note">
+        <p>Use of this Site is subject to express terms of use. By using this site, you signify that you agree to be bound by these.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    function toggleSidebar(show) {
+      const sidebar = document.getElementById('truva-sidebar');
+      const overlay = document.querySelector('.truva-sidebar-overlay');
+      sidebar.classList.toggle('active', show);
+      overlay.style.display = show ? 'block' : 'none';
+    }
+
+    const langSelector = document.getElementById('language-selector');
+    const langDropdown = document.getElementById('language-dropdown');
+    const currentLangLabel = document.getElementById('current-lang-label');
+    const accountBtn = document.getElementById('account-btn');
+
+    langSelector.addEventListener('click', () => {
+      langDropdown.style.display = langDropdown.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!langSelector.contains(e.target) && !langDropdown.contains(e.target)) {
+        langDropdown.style.display = 'none';
+      }
+    });
+
+    langDropdown.querySelectorAll('div[data-lang]').forEach(item => {
+      item.addEventListener('click', () => {
+        const lang = item.getAttribute('data-lang');
+        const domain = location.hostname.split('.').slice(-2).join('.');
+        document.cookie = `googtrans=/en/${lang}; path=/; domain=.${domain}`;
+        location.reload();
+      });
+    });
+
+    function updateLanguageLabel() {
+      const match = document.cookie.match(/googtrans=\/en\/([a-zA-Z-]+)/);
+      const langCode = match ? match[1] : 'en';
+      const map = {
+        'en': 'English (US)', 'en-GB': 'English (UK)', 'es': 'Spanish', 'fr': 'French',
+        'de': 'German', 'it': 'Italian', 'zh-CN': 'Chinese', 'ja': 'Japanese', 'ru': 'Russian'
+      };
+      const flagMap = {
+        'en': '🇺🇸', 'en-GB': '🇬🇧', 'es': '🇪🇸', 'fr': '🇫🇷',
+        'de': '🇩🇪', 'it': '🇮🇹', 'zh-CN': '🇨🇳', 'ja': '🇯🇵', 'ru': '🇷🇺'
+      };
+      currentLangLabel.textContent = `${flagMap[langCode] || '🇺🇸'} ${map[langCode] || 'English (US)'}`;
+    }
+
+    updateLanguageLabel();
+
+    accountBtn.addEventListener('click', () => {
+      window.location.href = '/account';
+    });
+  </script>
+</body>

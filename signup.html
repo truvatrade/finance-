@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #0b1120;
+      color: white;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .logo {
+      margin-bottom: 1.8rem;
+    }
+
+    .logo img {
+      height: 90px;
+      max-width: 220px;
+      object-fit: contain;
+    }
+
+    .card {
+      background-color: #111827;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      width: 100%;
+      max-width: 450px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.6rem;
+      font-weight: 600;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-weight: 500;
+      font-size: 0.95rem;
+      margin-top: 1rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    select {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: none;
+  background-color: #1f2937;
+  color: white;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+option {
+  background-color: #1f2937;
+  color: white;
+}
+
+    input:focus,
+    select:focus {
+      outline: none;
+      background-color: #374151;
+    }
+
+    .phone-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .phone-wrapper img {
+      width: 26px;
+      height: 20px;
+      border-radius: 4px;
+      background: white;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 0.5rem;
+      transform: scale(1.2);
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      font-size: 0.9rem;
+      margin-top: 1.2rem;
+      line-height: 1.4;
+    }
+
+    .checkbox-group label {
+      margin: 0;
+      font-weight: normal;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.85rem;
+      margin-top: 1.5rem;
+      background-color: #2563eb;
+      border: none;
+      border-radius: 0.5rem;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #1e40af;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.95rem;
+    }
+
+    .login-link a {
+      color: #60a5fa;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 480px) {
+      .logo img {
+        height: 70px;
+        max-width: 180px;
+      }
+
+      .card {
+        padding: 1.2rem;
+        border-radius: 0.75rem;
+      }
+
+      h2 {
+        font-size: 1.4rem;
+      }
+
+      input,
+      select {
+        font-size: 0.95rem;
+        padding: 0.65rem;
+      }
+
+      .phone-wrapper img {
+        width: 24px;
+        height: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="logo">
+    <img src="https://res.cloudinary.com/dy65t4t1x/image/upload/v1750736066/squticdpmeefnalovglk.png" alt="Truva Trade Logo" />
+  </div>
+
+  <div class="card">
+    <h2>Create an Account</h2>
+
+    <form>
+      <label for="firstName">First Name</label>
+      <input type="text" id="firstName" placeholder="First Name" autocomplete="given-name" required>
+
+      <label for="lastName">Last Name</label>
+      <input type="text" id="lastName" placeholder="Last Name" autocomplete="family-name" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Email" autocomplete="email" required>
+
+      <label for="gender">Gender</label>
+      <select id="gender" required>
+        <option value="" disabled selected>Select Gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Other</option>
+      </select>
+
+      <label for="phone">Phone Number</label>
+      <div class="phone-wrapper">
+        <img id="flag" src="" alt="Flag" />
+        <input type="text" id="phone" placeholder="Phone Number" autocomplete="tel" required>
+      </div>
+
+      <label for="currency">Currency</label>
+      <select id="currency" required>
+        <option value="GBP">GBP</option>
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+      </select>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Password" autocomplete="new-password" required>
+
+      <label for="confirmPassword">Confirm Password</label>
+      <input type="password" id="confirmPassword" placeholder="Confirm Password" autocomplete="new-password" required>
+
+      <div class="checkbox-group">
+        <input type="checkbox" id="terms">
+        <label for="terms">I agree to Online Tasty Trade Terms and conditions</label>
+      </div>
+
+      <button type="submit">Register</button>
+    </form>
+
+    <div class="login-link">
+      Already have an account? <a href="/login.html">Login</a>
+    </div>
+  </div>
+
+  <!-- Auto-detect country flag -->
+  <script>
+    fetch('https://ipapi.co/json/')
+      .then(res => res.json())
+      .then(data => {
+        const countryCode = data.country_code;
+        const flagUrl = `https://flagcdn.com/w40/${countryCode.toLowerCase()}.png`;
+        document.getElementById('flag').src = flagUrl;
+      })
+      .catch(() => {
+        document.getElementById('flag').src = 'https://flagcdn.com/w40/gb.png';
+      });
+  </script>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <!-- Firebase Configuration and Registration Logic -->
+  <script>
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyB89FVW7DW8xdASCAyNsTN71zK5p_YMSVk",
+      authDomain: "titanium-fx.firebaseapp.com",
+      projectId: "titanium-fx",
+      storageBucket: "titanium-fx.appspot.com",
+      messagingSenderId: "623119248603",
+      appId: "1:623119248603:web:824489ee0033bef9bdf0fe"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // Form submission
+    document.querySelector("form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const firstName = document.getElementById("firstName").value.trim();
+      const lastName = document.getElementById("lastName").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const gender = document.getElementById("gender").value;
+      const phone = document.getElementById("phone").value.trim();
+      const currency = document.getElementById("currency").value;
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+      const termsAccepted = document.getElementById("terms").checked;
+
+      if (!termsAccepted) {
+        alert("You must accept the terms and conditions.");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        alert("Passwords do not match.");
+        return;
+      }
+
+      try {
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        const user = userCredential.user;
+
+        await db.collection("users").doc(user.uid).set({
+          firstName,
+          lastName,
+          email,
+          gender,
+          phone,
+          currency,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        alert("Registration successful!");
+        window.location.href = "/dashboard.html";
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+  </script>
+</body>
+</html>

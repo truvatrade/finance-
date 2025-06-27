@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Make a Deposit</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #0b1120;
+      color: #e2e8f0;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      background-color: #0f172a;
+      border-bottom: 1px solid #1e293b;
+    }
+    .back-button {
+      background-color: #1f2937;
+      color: white;
+      border: none;
+      padding: 0.4rem 0.9rem;
+      font-size: 0.85rem;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .breadcrumb {
+      padding: 1rem 1.5rem;
+      font-size: 0.9rem;
+      color: #94a3b8;
+    }
+    .card {
+      max-width: 480px;
+      margin: 2rem auto;
+      background-color: #111827;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #38bdf8;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: #cbd5e1;
+    }
+    select, input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background-color: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 0.75rem;
+      color: #e2e8f0;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    select:focus, input:focus {
+      border-color: #38bdf8;
+      outline: none;
+    }
+    .logo-display {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+    .logo-display img {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      background-color: #38bdf8;
+      color: #0f172a;
+      font-weight: 600;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
+    }
+    .btn:hover {
+      background-color: #0ea5e9;
+    }
+    .history-entry {
+      border-bottom: 1px solid #1e293b;
+      padding: 1rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+    .status {
+      padding: 0.3rem 0.6rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 0.75rem;
+    }
+    .status.pending { background-color: #facc15; color: #1e1e1e; }
+    .status.waiting { background-color: #60a5fa; color: white; }
+    .status.success { background-color: #22c55e; color: white; }
+
+    @media (max-width: 480px) {
+      .card {
+        margin: 1.5rem;
+        padding: 1.5rem;
+      }
+      .card-title {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="javascript:history.back()" class="back-button">← Back</a>
+  </header>
+
+  <div class="breadcrumb">
+    Home / Make a Deposit
+  </div>
+
+  <!-- First Card: Deposit Form -->
+  <div class="card">
+    <div class="card-title">Select Payment Method</div>
+
+    <div class="logo-display" id="coinLogo"></div>
+
+    <label for="currency">Currency</label>
+    <select id="currency" onchange="updateNetworks()">
+      <option value="">-- Choose --</option>
+      <option value="btc">BTC</option>
+    </select>
+
+    <label for="network">Network</label>
+    <select id="network">
+      <option value="">-- Select a currency first --</option>
+    </select>
+
+    <label for="amount">Amount</label>
+    <input type="number" id="amount" placeholder="Enter amount" min="0" step="any" />
+
+    <button class="btn" onclick="submitDeposit()">Continue</button>
+  </div>
+
+  <!-- Second Card: Deposit History -->
+  <div class="card">
+    <div class="card-title">Deposit History</div>
+    <div id="deposit-history">
+      Loading...
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    // TODO: Replace with your real Firebase config
+  
+  const firebaseConfig = {
+    apiKey: "AIzaSyB89FVW7DW8xdASCAyNsTN71zK5p_YMSVk",
+    authDomain: "titanium-fx.firebaseapp.com",
+    projectId: "titanium-fx",
+    storageBucket: "titanium-fx.appspot.com",
+    messagingSenderId: "623119248603",
+    appId: "1:623119248603:web:824489ee0033bef9bdf0fe"
+  };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const coinLogos = {
+      usdt: "https://img.icons8.com/?size=100&id=DEDR1BLPBScO&format=png&color=000000",
+      usdc: "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png",
+      btc: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
+      eth: "https://assets.coingecko.com/coins/images/279/large/ethereum.png",
+      sol: "https://assets.coingecko.com/coins/images/4128/large/solana.png",
+      xrp: "https://assets.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png",
+      ton: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ton/info/logo.png",
+      bnb: "https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png"
+    };
+
+    const networks = {
+      usdt: ["trc20", "erc20", "bep20"],
+      usdc: ["erc20", "trc20"],
+      btc: ["bitcoin"],
+      eth: ["ethereum"],
+      sol: ["solana"],
+      xrp: ["ripple"],
+      ton: ["ton"],
+      bnb: ["bep20"]
+    };
+
+    function updateNetworks() {
+      const currency = document.getElementById("currency").value;
+      const network = document.getElementById("network");
+      const logoDisplay = document.getElementById("coinLogo");
+
+      logoDisplay.innerHTML = "";
+      if (coinLogos[currency]) {
+        const img = document.createElement("img");
+        img.src = coinLogos[currency];
+        img.alt = currency.toUpperCase();
+        logoDisplay.appendChild(img);
+      }
+
+      network.innerHTML = "";
+      if (networks[currency]) {
+        networks[currency].forEach(net => {
+          const opt = document.createElement("option");
+          opt.value = net;
+          opt.textContent = net.toUpperCase();
+          network.appendChild(opt);
+        });
+      } else {
+        const defaultOpt = document.createElement("option");
+        defaultOpt.textContent = "-- Select a currency first --";
+        network.appendChild(defaultOpt);
+      }
+    }
+
+    function submitDeposit() {
+  const currency = document.getElementById("currency").value;
+  const network = document.getElementById("network").value;
+  const amount = parseFloat(document.getElementById("amount").value);
+
+  if (!currency || !network || isNaN(amount) || amount <= 0) {
+    alert("Please fill all fields correctly.");
+    return;
+  }
+
+  console.log("Submitting deposit:", { currency, network, amount }); // <-- Add this
+
+  db.collection("deposits").add({
+    currency,
+    network,
+    amount,
+    status: "pending",
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  }).then((docRef) => {
+    console.log("Redirecting to paynow.html...");
+    const depositId = docRef.id;
+    const queryParams = new URLSearchParams({
+      id: depositId,
+      currency,
+      network,
+      amount
+    }).toString();
+    window.location.href = `paynow.html?${queryParams}`;
+  }).catch(err => {
+    alert("Error creating deposit: " + err.message);
+    console.error("Firebase error:", err); // <-- Add this
+  });
+}
+
+    function loadDeposits() {
+      const historyEl = document.getElementById("deposit-history");
+      historyEl.innerHTML = "Loading...";
+
+      db.collection("deposits").orderBy("createdAt", "desc").onSnapshot(snapshot => {
+        historyEl.innerHTML = "";
+        snapshot.forEach(doc => {
+          const { currency, amount, status } = doc.data();
+          const entry = document.createElement("div");
+          entry.className = "history-entry";
+          entry.innerHTML = `
+            <div>${currency.toUpperCase()} - $${amount}</div>
+            <div class="status ${status}">${status.charAt(0).toUpperCase() + status.slice(1)}</div>
+          `;
+          historyEl.appendChild(entry);
+        });
+
+        if (historyEl.innerHTML === "") {
+          historyEl.innerHTML = "<p style='text-align:center;'>No deposits found.</p>";
+        }
+      });
+    }
+
+    loadDeposits();
+  </script>
+</body>
+</html>

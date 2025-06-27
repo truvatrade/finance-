@@ -1,0 +1,260 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Edit Profile - Titanium FX</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #0b1120;
+      color: white;
+      min-height: 100vh;
+    }header {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: #0f172a;
+  border-bottom: 1px solid #1e293b;
+  gap: 0.75rem;
+}
+
+.back-button {
+  background-color: #1f2937;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.container {
+  padding: 1.5rem;
+  max-width: 600px;
+  margin: auto;
+}
+
+.breadcrumb {
+  padding: 1rem 1.5rem;
+  font-size: 0.9rem;
+  color: #cbd5e1;
+}
+
+label {
+  display: block;
+  margin: 1rem 0 0.3rem;
+  color: #cbd5e1;
+}
+
+input, select {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: none;
+  background-color: #1e293b;
+  color: white;
+}
+
+.form-section {
+  margin-bottom: 2rem;
+}
+
+button.save-btn {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.upload-preview {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.upload-preview img {
+  margin-top: 0.3rem;
+  max-width: 100px;
+  border-radius: 6px;
+}
+
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #10b981;
+  padding: 12px 18px;
+  border-radius: 6px;
+  font-weight: bold;
+  color: white;
+  z-index: 1000;
+  display: none;
+}
+
+  </style>
+</head>
+<body>
+  <header>
+    <a href="javascript:history.back()" class="back-button">← Back</a>
+  </header>  <div class="breadcrumb">Home / Edit Profile</div>
+  <div class="toast" id="toast">Profile updated successfully</div>  <div class="container">
+    <div class="form-section">
+      <h2>Personal Information</h2>
+      <label>First Name:</label>
+      <input type="text" id="firstName" required /><label>Last Name:</label>
+  <input type="text" id="lastName" required />
+
+  <label>Phone Number:</label>
+  <input type="text" id="phone" required />
+
+  <label>Zip Code:</label>
+  <input type="text" id="zip" required />
+
+  <label>Country:</label>
+  <input type="text" id="country" required />
+
+  <label>Email:</label>
+  <input type="email" id="email" disabled />
+
+  <label>Gender:</label>
+  <select id="gender" required>
+    <option value="">Select</option>
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
+  </select>
+
+  <label>Home Address:</label>
+  <input type="text" id="address" required />
+</div>
+
+<div class="form-section">
+  <h2>KYC Verification</h2>
+  <label>Upload ID Document:</label>
+  <input type="file" id="idDoc" accept="image/*,application/pdf" />
+  <div class="upload-preview" id="idDocPreview"></div>
+
+  <label>Upload Selfie with ID:</label>
+  <input type="file" id="selfie" accept="image/*" />
+  <div class="upload-preview" id="selfiePreview"></div>
+
+  <label>Document Expiry Date:</label>
+  <input type="date" id="expiryDate" required />
+</div>
+
+<button class="save-btn" onclick="saveProfile()">Save Changes</button>
+
+  </div>  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-storage.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB89FVW7DW8xdASCAyNsTN71zK5p_YMSVk",
+      authDomain: "titanium-fx.firebaseapp.com",
+      projectId: "titanium-fx",
+      storageBucket: "titanium-fx.appspot.com",
+      messagingSenderId: "623119248603",
+      appId: "1:623119248603:web:824489ee0033bef9bdf0fe"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+    const auth = getAuth();
+    let currentUID = null;
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.innerText = message;
+      toast.style.display = "block";
+      setTimeout(() => toast.style.display = "none", 3000);
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) return alert("Please login first.");
+      currentUID = user.uid;
+      const docSnap = await getDoc(doc(db, "users", currentUID));
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        document.getElementById("firstName").value = data.firstName || "";
+        document.getElementById("lastName").value = data.lastName || "";
+        document.getElementById("phone").value = data.phone || "";
+        document.getElementById("zip").value = data.zip || "";
+        document.getElementById("country").value = data.country || "";
+        document.getElementById("gender").value = data.gender || "";
+        document.getElementById("email").value = user.email || "";
+        document.getElementById("address").value = data.address || "";
+      }
+    });
+
+    async function saveProfile() {
+      if (!currentUID) return alert("User not authenticated");
+      const requiredFields = ["firstName", "lastName", "phone", "zip", "country", "gender", "address", "expiryDate"];
+      for (const id of requiredFields) {
+        if (!document.getElementById(id).value.trim()) {
+          alert("Please fill in all required fields.");
+          return;
+        }
+      }
+      const userRef = doc(db, "users", currentUID);
+      const data = {
+        firstName: document.getElementById("firstName").value,
+        lastName: document.getElementById("lastName").value,
+        phone: document.getElementById("phone").value,
+        zip: document.getElementById("zip").value,
+        country: document.getElementById("country").value,
+        gender: document.getElementById("gender").value,
+        address: document.getElementById("address").value,
+      };
+      await setDoc(userRef, data, { merge: true });
+
+      const idFile = document.getElementById("idDoc").files[0];
+      const selfieFile = document.getElementById("selfie").files[0];
+      const expiryDate = document.getElementById("expiryDate").value;
+      if (idFile && selfieFile && expiryDate) {
+        const idRef = ref(storage, `kyc/${currentUID}/id`);
+        const selfieRef = ref(storage, `kyc/${currentUID}/selfie`);
+        await uploadBytes(idRef, idFile);
+        await uploadBytes(selfieRef, selfieFile);
+        const idURL = await getDownloadURL(idRef);
+        const selfieURL = await getDownloadURL(selfieRef);
+        const kycRef = doc(db, "kyc", currentUID);
+        await setDoc(kycRef, {
+          uid: currentUID,
+          idURL,
+          selfieURL,
+          expiryDate,
+          status: "pending",
+          timestamp: new Date()
+        });
+      }
+      showToast("Profile updated successfully");
+    }
+
+    document.getElementById("idDoc").addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file && file.type.startsWith("image")) {
+        const preview = document.getElementById("idDocPreview");
+        preview.innerHTML = `<img src="${URL.createObjectURL(file)}" alt="ID Preview">`;
+      }
+    });
+
+    document.getElementById("selfie").addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file && file.type.startsWith("image")) {
+        const preview = document.getElementById("selfiePreview");
+        preview.innerHTML = `<img src="${URL.createObjectURL(file)}" alt="Selfie Preview">`;
+      }
+    });
+  </script></body>
+</html>

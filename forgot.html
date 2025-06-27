@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Forgot Password</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #0b1120;
+      font-family: 'Inter', sans-serif;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 2rem 1rem;
+    }
+
+    .logo {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .logo img {
+      height: 90px;
+      max-width: 240px;
+      object-fit: contain;
+    }
+
+    .card {
+      background-color: #111827;
+      width: 100%;
+      max-width: 420px;
+      padding: 2rem;
+      border-radius: 1.25rem;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+      font-size: 1.6rem;
+      font-weight: 600;
+    }
+
+    p.description {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #d1d5db;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .input-group i {
+      position: absolute;
+      top: 50%;
+      left: 1rem;
+      transform: translateY(-50%);
+      color: #9ca3af;
+      font-size: 1rem;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 0.85rem 1rem 0.85rem 2.8rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      background-color: #1f2937;
+      color: white;
+    }
+
+    .input-group input::placeholder {
+      color: #aaa;
+    }
+
+    .input-group input:focus {
+      outline: none;
+      background-color: #374151;
+    }
+
+    .btn {
+      width: 100%;
+      background-color: #3b82f6;
+      color: #fff;
+      padding: 0.85rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .btn:hover {
+      background-color: #2563eb;
+    }
+
+    #message {
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 480px) {
+      .logo img {
+        height: 70px;
+        max-width: 180px;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+
+      h2 {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Logo -->
+  <div class="logo">
+    <img src="https://res.cloudinary.com/dy65t4t1x/image/upload/v1750736066/squticdpmeefnalovglk.png" alt="Logo">
+  </div>
+
+  <!-- Password Reset Card -->
+  <div class="card">
+    <h2>Forgot your password?</h2>
+    <p class="description">
+      No problem. Just let us know your email address and we will email you a password reset link.
+    </p>
+
+    <label for="email">Email</label>
+    <div class="input-group">
+      <i class="fas fa-envelope"></i>
+      <input type="email" id="email" placeholder="Enter your email" required>
+    </div>
+
+    <button class="btn" onclick="sendPasswordReset()">Email Password Reset Link</button>
+
+    <div id="message"></div>
+  </div>
+
+  <!-- Firebase JS SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+  <script>
+    // Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyB89FVW7DW8xdASCAyNsTN71zK5p_YMSVk",
+      authDomain: "titanium-fx.firebaseapp.com",
+      projectId: "titanium-fx",
+      storageBucket: "titanium-fx.appspot.com",
+      messagingSenderId: "623119248603",
+      appId: "1:623119248603:web:824489ee0033bef9bdf0fe"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    function showMessage(text, type) {
+      const msgDiv = document.getElementById('message');
+      msgDiv.textContent = text;
+      msgDiv.style.color = type === 'success' ? '#22c55e' : '#ef4444'; // Green or Red
+    }
+
+    function sendPasswordReset() {
+      const email = document.getElementById('email').value;
+
+      if (!email) {
+        showMessage("Please enter your email address.", 'error');
+        return;
+      }
+
+      auth.sendPasswordResetEmail(email)
+        .then(() => {
+          showMessage("Password reset email sent. Please check your inbox.", 'success');
+        })
+        .catch(error => {
+          const msg = error.code === 'auth/user-not-found'
+            ? "No user found with that email."
+            : "Something went wrong. Please try again.";
+          showMessage(msg, 'error');
+        });
+    }
+  </script>
+</body>
+</html>

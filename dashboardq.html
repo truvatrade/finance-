@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Broker Dashboard - Welcome</title>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+    <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      background-color: #0b1120;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: white;
+    }header {
+  height: 70px;
+  width: 100%;
+  background: #121a33;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  box-sizing: border-box;
+  font-size: 13px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sidebar-icon {
+  width: 28px;
+  height: 20px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sidebar-icon span {
+  display: block;
+  height: 3px;
+  width: 100%;
+  background-color: #ddd;
+  border-radius: 2px;
+}
+
+.sidebar-icon span:last-child {
+  margin-left: 5px;
+  width: calc(100% - 5px);
+}
+
+#language-selector {
+  cursor: pointer;
+  font-size: 12px;
+  background: #1a2238;
+  border-radius: 5px;
+  padding: 4px 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+}
+
+#language-selector span {
+  font-weight: 600;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+#language-selector img {
+  width: 16px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.language-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #1a2238;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.7);
+  font-size: 12px;
+  margin-top: 3px;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.language-dropdown div {
+  padding: 6px 10px;
+  cursor: pointer;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.language-dropdown div:hover {
+  background: #2e3b6e;
+}
+
+.avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #2e3b6e;
+  cursor: pointer;
+}
+
+.content-wrapper {
+  padding-top: 90px;
+}
+
+#greeting {
+  padding: 0 20px;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.wallets-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 24px 12px;
+}
+
+.wallet-card {
+  flex: 1 1 280px;
+  padding: 16px 20px;
+  background: #182447;
+  border-radius: 20px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 120px;
+}
+
+.wallet-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.wallet-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wallet-icon i {
+  font-size: 28px;
+  color: white;
+}
+
+.wallet-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+}
+
+.wallet-text .label {
+  font-size: 14px;
+  opacity: 0.7;
+  margin-bottom: 6px;
+}
+
+.wallet-text .amount {
+  font-size: 22px;
+  font-weight: bold;
+}
+.wallet-card canvas {
+  margin: 0;
+  padding: 0;
+  width: 100% !important;
+  height: 60px !important;
+  display: block;
+  box-sizing: border-box;
+}
+
+
+  </style>
+</head>
+<body>
+  <div id="greeting">
+    <div id="welcome" style="font-size: 24px; font-weight: 700;">Welcome back...</div>
+    <div id="date" style="font-size: 18px; font-weight: 600; margin-top: 6px;"></div>
+  </div>
+
+  <div class="wallets-container">
+    <div class="wallet-card">
+      <div class="wallet-header">
+        <div class="wallet-icon" style="background-color: #2e4aad;"><i class="ph ph-wallet"></i></div>
+        <div class="wallet-text">
+          <div class="label">BALANCE</div>
+          <div class="amount" id="balance">£ 0.00</div>
+        </div>
+      </div>
+      <canvas id="chart-balance"></canvas>
+    </div>
+
+    <div class="wallet-card">
+      <div class="wallet-header">
+        <div class="wallet-icon" style="background-color: #2e7d32;"><i class="ph ph-wallet"></i></div>
+        <div class="wallet-text">
+          <div class="label">ACTIVE DEPOSIT</div>
+          <div class="amount" id="deposit">£ 0.00</div>
+        </div>
+      </div>
+      <canvas id="chart-deposit"></canvas>
+    </div>
+
+    <div class="wallet-card">
+      <div class="wallet-header">
+        <div class="wallet-icon" style="background-color: #c62828;"><i class="ph ph-wallet"></i></div>
+        <div class="wallet-text">
+          <div class="label">EARNED BALANCE</div>
+          <div class="amount" id="earned">£ 0.00</div>
+        </div>
+      </div>
+      <canvas id="chart-earned"></canvas>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyB89FVW7DW8xdASCAyNsTN71zK5p_YMSVk",
+      authDomain: "titanium-fx.firebaseapp.com",
+      projectId: "titanium-fx",
+      storageBucket: "titanium-fx.appspot.com",
+      messagingSenderId: "623119248603",
+      appId: "1:623119248603:web:824489ee0033bef9bdf0fe"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    function updateUI(data) {
+      document.getElementById('balance').textContent = `£ ${data.balance?.toFixed(2) || "0.00"}`;
+      document.getElementById('deposit').textContent = `£ ${data.deposit?.toFixed(2) || "0.00"}`;
+      document.getElementById('earned').textContent = `£ ${data.earned?.toFixed(2) || "0.00"}`;
+    }
+
+    auth.onAuthStateChanged(async user => {
+      if (user) {
+        document.getElementById('welcome').textContent = `Welcome back, ${user.displayName || "User"}`;
+        try {
+          const doc = await db.collection("users").doc(user.uid).get();
+          if (doc.exists) {
+            updateUI(doc.data());
+          } else {
+            console.warn("No data found for this user.");
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      } else {
+        document.getElementById('welcome').textContent = "Please log in to view dashboard";
+      }
+    });
+
+    // Optional: Display formatted current date
+    const date = new Date();
+    document.getElementById('date').textContent = date.toDateString();
+
+    // Simple chart rendering for visuals
+    const CHART_LENGTH = 20;
+    const generateData = () => Array.from({ length: CHART_LENGTH }, () => Math.floor(Math.random() * 20));
+    const renderChart = (id, color) => {
+      const ctx = document.getElementById(id).getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: Array(CHART_LENGTH).fill(""),
+          datasets: [{
+            data: generateData(),
+            borderColor: color,
+            backgroundColor: color + '33',
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: { x: { display: false }, y: { display: false } },
+          elements: { point: { radius: 0 } }
+        }
+      });
+    };
+
+    renderChart("chart-balance", "#2e4aad");
+    renderChart("chart-deposit", "#2e7d32");
+    renderChart("chart-earned", "#c62828");
+  </script>
+</body>
+</html>
